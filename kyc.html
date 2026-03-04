@@ -276,7 +276,7 @@ function stopCamera(){
         // ================= CHECK EXISTING STATUS =================
         function checkStatus() {
 
-            fetch("http://localhost:3000/kyc/status", {
+            fetch("https://waicoinbn.onrender.com/kyc/status", {
                 headers: { Authorization: "Bearer " + token }
             })
                 .then(res => res.json())
@@ -381,7 +381,7 @@ document.getElementById("docUpload").addEventListener("change", function(){
 
             reader.onload = function () {
 
-                fetch("http://localhost:3000/kyc/submit", {
+                fetch("https://waicoinbn.onrender.com/kyc/submit", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -420,5 +420,6 @@ document.getElementById("docUpload").addEventListener("change", function(){
     </script>
 
 </body>
+
 
 </html>
