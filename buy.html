@@ -292,7 +292,7 @@ function parseJwt(token) {
 const myUserId = parseJwt(token).userId;
 
 // 🔥 CONNECT SOCKET AFTER USER ID READY
-const socket = io("http://localhost:3000");
+const socket = io("https://waicoinbn.onrender.com");
 
 socket.emit("join", myUserId);
 
@@ -308,7 +308,7 @@ loadBalance();
 // ================= MARKET =================
 function loadMarket(){
 
-    fetch("http://localhost:3000/sell/all",{
+    fetch("https://waicoinbn.onrender.com/sell/all",{
         headers:{ Authorization:"Bearer "+token }
     })
     .then(res=>res.json())
@@ -368,7 +368,7 @@ function loadMarket(){
 
 // ================= BALANCE =================
 function loadBalance(){
-    fetch("http://localhost:3000/my-coins",{
+    fetch("https://waicoinbn.onrender.com/my-coins",{
         headers:{ Authorization:"Bearer "+token }
     })
     .then(res=>res.json())
@@ -411,4 +411,5 @@ setInterval(loadMarket, 5000);
 </script>
 
 </body>
+
 </html>
