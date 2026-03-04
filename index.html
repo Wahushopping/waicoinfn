@@ -23,18 +23,25 @@ body{
     font-weight:bold;
     font-size:18px;
 }
+/* ===== MOBILE RESPONSIVE FIX ===== */
 
-.footer-container{
-    flex-direction:column;
-}
 @media (max-width:768px){
 
-    .coin-count{
-        font-size:40px;
+    body{
+        font-size:14px;
     }
 
-    .card{
-        padding:20px;
+    /* Top bar mobile */
+    .top-bar{
+        flex-wrap:wrap;
+        gap:10px;
+        padding:10px 4%;
+    }
+
+    .nav-links{
+        width:100%;
+        justify-content:center;
+        gap:10px;
     }
 
     .nav-btn{
@@ -43,13 +50,62 @@ body{
     }
 
     .balance{
+        font-size:13px;
+    }
+
+    /* Cards */
+    .card{
+        width:92%;
+        margin:20px auto;
+        padding:18px;
+    }
+
+    /* Portfolio section */
+    .portfolio-top{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .coin-count{
+        font-size:38px;
+    }
+
+    /* Graph image */
+    .graph-link img{
+        width:100%;
+        max-width:220px;
+    }
+
+    /* Inputs fix */
+    .card input{
+        width:100%;
+        box-sizing:border-box;
+    }
+
+    /* Referral section */
+    #myReferralCode{
+        width:100%;
+    }
+
+    /* Buttons */
+    .card button{
         font-size:14px;
     }
 
-    .portfolio-row{
-        font-size:14px;
+    /* Footer */
+    .footer-container{
+        flex-direction:column;
+        gap:20px;
     }
 
+}
+#myReferralCode{
+    width:100%;
+}
+
+.card div{
+    flex-wrap:wrap;
 }
 .nav-links{
     display:flex;
@@ -859,4 +915,5 @@ setInterval(loadCoins, 5000);
 
 </body>
 </html>
+
 
