@@ -423,6 +423,23 @@ select{
     
 </div>
 <div class="card">
+    <h3>My Referral Code</h3>
+
+    <div style="display:flex; gap:10px; align-items:center; margin-top:10px;">
+        <input type="text" id="myReferralCode" readonly style="flex:1;">
+        <button onclick="copyReferral()">Copy</button>
+    </div>
+
+    <p style="margin-top:10px; font-size:13px; opacity:0.8;">
+        Invite friends and earn <b>2 coins</b> for each referral.
+    </p>
+</div>
+
+
+
+
+
+<div class="card">
     <h2>Daily Profit Example (1% Per Day)</h2>
 
     <div id="profitBox" style="margin-top:15px; font-size:16px; line-height:1.6;">
@@ -523,7 +540,7 @@ function updateCurrency(){
     const receiverEmail = document.getElementById("receiverEmail").value;
     const coins = document.getElementById("transferAmount").value;
 
-    fetch("http://localhost:3000/transfer/create", {
+    fetch("https://waicoinbn.onrender.com/transfer/create", {
         method:"POST",
         headers:{
             "Content-Type":"application/json",
@@ -609,7 +626,7 @@ function redeemTransfer(){
 
     const code = document.getElementById("redeemCode").value;
 
-    fetch("http://localhost:3000/transfer/redeem", {
+    fetch("https://waicoinbn.onrender.com/transfer/redeem", {
         method:"POST",
         headers:{
             "Content-Type":"application/json",
@@ -656,7 +673,7 @@ window.onclick = function(event){
 }
 function checkKYCStatus(){
 
-    fetch("http://localhost:3000/kyc/status", {
+    fetch("https://waicoinbn.onrender.com/kyc/status", {
         headers:{
             Authorization: "Bearer " + token
         }
@@ -720,10 +737,10 @@ function loadCoins() {
     }
 
     Promise.all([
-        fetch("http://localhost:3000/my-coins", {
+        fetch("https://waicoinbn.onrender.com/my-coins", {
             headers: { Authorization: "Bearer " + token }
         }),
-        fetch("http://localhost:3000/coin-price")
+        fetch("https://waicoinbn.onrender.com/coin-price")
     ])
     .then(async ([coinsRes, priceRes]) => {
 
@@ -746,6 +763,33 @@ function loadCoins() {
     })
     .catch(err => console.log(err));
 }
+
+
+function loadReferralCode(){
+
+    fetch("https://waicoinbn.onrender.com/my-referral",{
+        headers:{
+            Authorization:"Bearer " + token
+        }
+    })
+    .then(res=>res.json())
+    .then(data=>{
+
+        document.getElementById("myReferralCode").value =
+            data.referralCode || "No code";
+
+    })
+    .catch(err=>console.log(err));
+
+}
+function copyReferral(){
+
+    const code = document.getElementById("myReferralCode").value;
+
+    navigator.clipboard.writeText(code)
+    .then(()=>alert("Referral code copied ✅"));
+
+}
 function loadLoggedInUser(){
 
     try {
@@ -759,11 +803,12 @@ function loadLoggedInUser(){
 
 loadLoggedInUser();
 loadCoins();
+loadReferralCode();
 function checkMessages(){
 
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:3000/message/inbox",{
+    fetch("https://waicoinbn.onrender.com/message/inbox",{
         headers:{ Authorization:"Bearer "+token }
     })
     .then(res=>res.json())
