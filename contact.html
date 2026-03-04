@@ -79,7 +79,7 @@ document.getElementById("contactForm").onsubmit = async function(e){
     const message = document.getElementById("message").value;
 
     try {
-        const res = await fetch("http://localhost:3000/contact",{
+        const res = await fetch("https://waicoinbn.onrender.com/contact",{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"
@@ -101,4 +101,5 @@ document.getElementById("contactForm").onsubmit = async function(e){
 }
 </script>
 </body>
+
 </html>
