@@ -279,7 +279,7 @@ z-index:999;
         </button>
 
     </div>
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="https://waicoinbn.onrender.com/socket.io/socket.io.js"></script>
 
     <script>
 
@@ -298,7 +298,7 @@ z-index:999;
         }
 
         /* 🔥 SOCKET REALTIME */
-        const socket = io("http://localhost:3000");
+        const socket = io("https://waicoinbn.onrender.com");
 
         socket.emit("join", myUserId);
 
@@ -339,7 +339,7 @@ async function submitReport() {
 
     try {
 
-        const res = await fetch("http://localhost:3000/report", {
+        const res = await fetch("https://waicoinbn.onrender.com/report", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -385,7 +385,7 @@ async function submitReport() {
         function loadSellerInfo() {
 
             // 🔥 Check if I am active seller (show send button)
-            fetch(`http://localhost:3000/user/${myUserId}`, {
+            fetch(`https://waicoinbn.onrender.com/user/${myUserId}`, {
                 headers: { Authorization: "Bearer " + token }
             })
                 .then(res => res.json())
@@ -395,7 +395,7 @@ async function submitReport() {
                 });
 
             // 🔥 Load other user info
-            fetch(`http://localhost:3000/user/${otherUserId}`, {
+            fetch(`https://waicoinbn.onrender.com/user/${otherUserId}`, {
                 headers: { Authorization: "Bearer " + token }
             })
                 .then(res => res.json())
@@ -452,7 +452,7 @@ async function submitReport() {
                 return;
             }
 
-            fetch("http://localhost:3000/coins/send", {
+            fetch("https://waicoinbn.onrender.com/coins/send", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -487,7 +487,7 @@ async function submitReport() {
                 return;
             }
 
-            fetch(`http://localhost:3000/sell/buy/${otherUserId}`, {
+            fetch(`https://waicoinbn.onrender.com/sell/buy/${otherUserId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -576,7 +576,7 @@ async function submitReport() {
         }
         function sendToServer(text, image) {
 
-            fetch("http://localhost:3000/message/send", {
+            fetch("https://waicoinbn.onrender.com/message/send", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -615,7 +615,7 @@ async function submitReport() {
         /* LOAD MESSAGES */
         function loadMessages() {
 
-            fetch(`http://localhost:3000/message/${otherUserId}`, {
+            fetch(`https://waicoinbn.onrender.com/message/${otherUserId}`, {
                 headers: { Authorization: "Bearer " + token }
             })
                 .then(res => res.json())
@@ -689,5 +689,6 @@ ${msg.text ? `
     </script>
 
 </body>
+
 
 </html>
