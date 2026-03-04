@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin - Reports</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI;
+    background:#0f172a;
+    color:white;
+}
+
+.header{
+    background:#111827;
+    padding:15px 30px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.container{
+    padding:20px 30px;
+}
+
+.card{
+    background:#1e293b;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+}
+
+.badge{
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.pending{
+    background:#f59e0b;
+}
+
+.reviewed{
+    background:#22c55e;
+}
+
+button{
+    border:none;
+    padding:6px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+    margin-right:5px;
+}
+
+.ban{
+    background:#ef4444;
+    color:white;
+}
+
+.unban{
+    background:#3b82f6;
+    color:white;
+}
+
+.review{
+    background:#22c55e;
+}
+
+.top-bar{
+    margin-bottom:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    🚨 Admin Report Management
+</div>
+
+<div class="container">
+
+<div class="top-bar">
+    <button onclick="loadReports()">🔄 Refresh</button>
+</div>
+
+<div id="reportList">
+Loading reports...
+</div>
+
+</div>
+<script>
+
+const token = localStorage.getItem("token");
+
+if (!token) {
+    alert("Admin login required");
+    window.location.href = "login.html";
+}
+
+async function loadReports(){
+
+    const reportList = document.getElementById("reportList");
+    reportList.innerHTML = "Loading...";
+
+    try {
+
+        const res = await fetch("http://localhost:3000/admin/reports",{
+            headers:{
+                Authorization:"Bearer "+token
+            }
+        });
+
+        if(!res.ok){
+            reportList.innerHTML = "Unauthorized access";
+            return;
+        }
+
+        const data = await res.json();
+
+        if(!data.length){
+            reportList.innerHTML="<p>No reports found.</p>";
+            return;
+        }
+
+        let html="";
+
+        data.forEach(report=>{
+
+            html+=`
+            <div class="card">
+                <div class="row">
+    <div>
+        <b>Reporter:</b> ${report.reporterId?.username || "Unknown"}
+        <br>
+        <span style="font-size:12px; color:#9ca3af;">
+            ID: ${report.reporterId?._id || "N/A"}
+        </span>
+    </div>
+
+    <div style="text-align:right;">
+        <b>Reported:</b> ${report.reportedUserId?.username || "Unknown"}
+        <br>
+        <span style="font-size:12px; color:#9ca3af;">
+            ID: ${report.reportedUserId?._id || "N/A"}
+        </span>
+    </div>
+</div>
+
+                <div class="row">
+                    <div><b>Reason:</b> ${report.reason}</div>
+                </div>
+
+                <div class="row">
+                    <div><b>Date:</b> ${new Date(report.createdAt).toLocaleString()}</div>
+                    <div>
+                        <span class="badge ${report.status}">
+                            ${report.status}
+                        </span>
+                    </div>
+                </div>
+
+                <div style="margin-top:10px;">
+
+                    <button class="review" 
+                    onclick="markReviewed('${report._id}', this)">
+                        Mark Reviewed
+                    </button>
+
+                    <button class="ban" 
+                    onclick="banUser('${report.reportedUserId?._id}', this)">
+                        Ban User
+                    </button>
+
+                    <button class="unban" 
+                    onclick="unbanUser('${report.reportedUserId?._id}', this)">
+                        Unban
+                    </button>
+
+                    ${report.isChatBlocked ? `
+                    <button style="background:#10b981;color:white;"
+                    onclick="openChat('${report.reporterId?._id}','${report.reportedUserId?._id}', this)">
+                        🔓 Open Chat
+                    </button>
+                    ` : ""}
+
+                </div>
+            </div>
+            `;
+        });
+
+        reportList.innerHTML=html;
+
+    } catch (err){
+        reportList.innerHTML = "Server error";
+    }
+}
+
+async function markReviewed(id, btn){
+
+    btn.disabled = true;
+
+    await fetch("http://localhost:3000/admin/review/"+id,{
+        method:"PUT",
+        headers:{ Authorization:"Bearer "+token }
+    });
+
+    loadReports();
+}
+
+async function openChat(user1, user2, btn){
+
+    btn.disabled = true;
+
+    const res = await fetch("http://localhost:3000/admin/chat/unblock",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            Authorization:"Bearer "+token
+        },
+        body:JSON.stringify({ user1, user2 })
+    });
+
+    const data = await res.json();
+
+    alert(data.message);
+    loadReports();
+}
+
+async function banUser(id, btn){
+
+    const reason = prompt("Enter ban reason:");
+
+    if(!reason) return;
+
+    btn.disabled = true;
+
+    await fetch("http://localhost:3000/admin/ban/"+id,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            Authorization:"Bearer "+token
+        },
+        body:JSON.stringify({reason})
+    });
+
+    loadReports();
+}
+
+async function unbanUser(id, btn){
+
+    btn.disabled = true;
+
+    await fetch("http://localhost:3000/admin/unban/"+id,{
+        method:"POST",
+        headers:{ Authorization:"Bearer "+token }
+    });
+
+    loadReports();
+}
+
+loadReports();
+
+</script>
+
+</body>
+</html>

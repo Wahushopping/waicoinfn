@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Panel - Wai Crypto</title>
+<style>
+body {
+    margin:0;
+    font-family:Segoe UI;
+    background:#0f172a;
+    color:white;
+}
+
+header {
+    background:#111827;
+    padding:15px 5%;
+    font-size:20px;
+    font-weight:bold;
+    color:#22d3ee;
+}
+
+.container {
+    display:flex;
+    padding:30px 5%;
+    gap:30px;
+}
+
+.user-list {
+    width:40%;
+    background:#1e293b;
+    padding:20px;
+    border-radius:10px;
+}
+
+.user-list div {
+    padding:10px;
+    cursor:pointer;
+    border-bottom:1px solid #333;
+}
+
+.user-list div:hover {
+    background:#0f172a;
+}
+
+.user-detail {
+    width:60%;
+    background:#1e293b;
+    padding:20px;
+    border-radius:10px;
+}
+
+button {
+    padding:6px 12px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin:5px 0;
+}
+
+.verify { background:#22c55e; color:white; }
+.addcoin { background:#3b82f6; color:white; }
+
+input {
+    padding:6px;
+    border:none;
+    border-radius:6px;
+    margin-top:5px;
+}
+</style>
+</head>
+<body>
+
+<header style="display:flex;justify-content:space-between;align-items:center;">
+
+<span>Admin Dashboard</span>
+
+<div style="display:flex;gap:10px;">
+
+<button onclick="window.location.href='kyc-pending.html'"
+style="background:orange;color:white;padding:6px 12px;border:none;border-radius:6px;">
+Pending KYC
+</button>
+
+<button onclick="window.location.href='kyc-approved.html'"
+style="background:#22c55e;color:white;padding:6px 12px;border:none;border-radius:6px;">
+Approved KYC
+</button>
+
+<button onclick="window.location.href='kyc-rejected.html'"
+style="background:#ef4444;color:white;padding:6px 12px;border:none;border-radius:6px;">
+Rejected KYC
+</button>
+<button onclick="window.location.href='admin-reports.html'"
+style="background:#ef4444;color:white;padding:6px 12px;border:none;border-radius:6px;">
+Reports
+</button>
+<button onclick="window.location.href='admin-contacts.html'"
+style="background:#ef4444;color:white;padding:6px 12px;border:none;border-radius:6px;">
+Contacts
+</button>
+</div>
+
+</header>
+
+<div style="background:#1e293b;padding:20px;border-radius:10px;margin-bottom:20px;">
+    <h3>Set Coin Price</h3>
+    <input type="number" id="priceInput" placeholder="Enter new coin price">
+    <button onclick="setPrice()">Update Price</button>
+    <p id="currentPrice"></p>
+</div>
+<div style="background:#1e293b;padding:20px;border-radius:10px;margin-bottom:20px;">
+    <h3>Platform Stats</h3>
+    <p id="totalUsers"></p>
+    <p id="totalCoins"></p>
+</div>
+<div class="container">
+
+<div class="user-list">
+<h3>Users</h3>
+
+<input type="text" id="searchUser"
+       placeholder="Search username..."
+       onkeyup="filterUsers()"
+       style="width:100%;margin-bottom:15px;">
+
+<div id="users"></div>
+</div>
+
+<div class="user-detail">
+<h3>User Detail</h3>
+<div id="detail">Select a user</div>
+</div>
+
+</div>
+<!-- IMAGE PREVIEW MODAL -->
+<div id="imageModal" 
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);
+     justify-content:center;align-items:center;z-index:9999;">
+
+    <span onclick="closeModal()" 
+          style="position:absolute;top:20px;right:40px;
+          font-size:40px;color:white;cursor:pointer;">&times;</span>
+
+    <img id="modalImage" 
+         style="max-width:90%;max-height:90%;
+         border-radius:10px;box-shadow:0 0 20px black;">
+</div>
+<script>
+               function loadKYC(){
+fetch("http://localhost:3000/admin/kyc")
+.then(res=>res.json())
+.then(data=>{
+    let html="";
+    data.forEach(k=>{
+        html += `
+        <div style="margin-bottom:20px;">
+        ${k.userId.username} - ${k.status}<br>
+        <img src="${k.livePhoto}" width="100"><br>
+        <img src="${k.documentPhoto}" width="100"><br>
+        <button onclick="approveKYC('${k._id}')">Approve</button>
+        <button onclick="rejectKYC('${k._id}')">Reject</button>
+        </div>
+        `;
+    });
+    document.getElementById("kycList").innerHTML = html;
+});
+}
+
+function approveKYC(kycId, userId){
+fetch(`http://localhost:3000/admin/kyc/approve/${kycId}`,{
+    method:"POST"
+})
+.then(()=>{
+    alert("KYC Approved");
+    loadUser(userId);
+});
+}
+
+function rejectKYC(kycId, userId){
+fetch(`http://localhost:3000/admin/kyc/reject/${kycId}`,{
+    method:"POST"
+})
+.then(()=>{
+    alert("KYC Rejected");
+    loadUser(userId);
+});
+}
+
+loadKYC();
+// LOAD CURRENT PRICE
+function loadPrice(){
+    fetch("http://localhost:3000/coin-price")
+    .then(res=>res.json())
+    .then(data=>{
+        document.getElementById("currentPrice").innerText =
+            "Current Price: ₹" + data.price;
+    });
+}
+
+// UPDATE PRICE
+function setPrice(){
+    const price = document.getElementById("priceInput").value;
+
+    fetch("http://localhost:3000/admin/set-price",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ price })
+    })
+    .then(()=> {
+        alert("Price Updated");
+        loadPrice();
+    });
+}
+
+loadPrice();
+function loadStats(){
+    fetch("http://localhost:3000/admin/stats")
+    .then(res=>res.json())
+    .then(data=>{
+        document.getElementById("totalUsers").innerText =
+            "Total Users: " + data.totalUsers;
+
+        document.getElementById("totalCoins").innerText =
+            "Total Coins in System: " + data.totalCoins;
+
+        document.getElementById("totalUsers").innerHTML += 
+            "<br>Banned Users: " + data.bannedUsers +
+            "<br>KYC Approved: " + data.approvedKYC +
+            "<br>KYC Pending: " + data.pendingKYC +
+            "<br>KYC Rejected: " + data.rejectedKYC;
+    });
+}
+
+loadStats();
+// ================= LOAD USERS =================
+let allUsers = [];
+
+function loadUsers() {
+fetch("http://localhost:3000/admin/users")
+.then(res => res.json())
+.then(data=>{
+
+    allUsers = data; // store globally
+
+    renderUsers(allUsers);
+});
+}
+function renderUsers(users){
+
+    let html="";
+
+    if(users.length === 0){
+        html = "<p>No users found</p>";
+    }
+
+    users.forEach(u=>{
+        html += `
+        <div onclick="loadUser('${u._id}')">
+            <b>${u.username}</b>
+            <br>
+            <span style="font-size:12px;color:#9ca3af;">
+                ID: ${u._id}
+            </span>
+        </div>`;
+    });
+
+    document.getElementById("users").innerHTML = html;
+}
+function filterUsers(){
+
+    const searchValue = document
+        .getElementById("searchUser")
+        .value
+        .toLowerCase()
+        .trim();
+
+    if(searchValue === ""){
+        renderUsers(allUsers);
+        return;
+    }
+
+    const filtered = allUsers.filter(u => {
+
+        const usernameMatch = u.username
+            ?.toLowerCase()
+            .includes(searchValue);
+
+        const idMatch = u._id
+            ?.toLowerCase()
+            .includes(searchValue);
+
+        return usernameMatch || idMatch;
+    });
+
+    renderUsers(filtered);
+}
+// ================= LOAD SINGLE USER =================
+function loadUser(id){
+fetch(`http://localhost:3000/admin/user/${id}`)
+.then(res=>res.json())
+.then(u=>{
+
+    let kycSection = "<p>No KYC submitted</p>";
+
+    if(u.kycData){
+
+        kycSection = `
+        <hr>
+        <h3>KYC Details</h3>
+
+        <p><b>Status:</b> ${u.kycData.status.toUpperCase()}</p>
+        <p><b>Full Name:</b> ${u.kycData.fullName}</p>
+        <p><b>Document Type:</b> ${u.kycData.documentType}</p>
+        <p><b>Document Number:</b> ${u.kycData.documentNumber}</p>
+        <p><b>Country:</b> ${u.kycData.country}</p>
+        <p><b>State:</b> ${u.kycData.state}</p>
+        <p><b>Place:</b> ${u.kycData.place}</p>
+        <p><b>Pincode:</b> ${u.kycData.pincode}</p>
+
+      <p><b>Live Photo:</b></p>
+<img src="${u.kycData.livePhoto}" width="120"
+     onclick="openImage('${u.kycData.livePhoto}')"
+     style="border-radius:8px;margin-bottom:10px;cursor:pointer;">
+
+<p><b>Document Photo:</b></p>
+<img src="${u.kycData.documentPhoto}" width="120"
+     onclick="openImage('${u.kycData.documentPhoto}')"
+     style="border-radius:8px;margin-bottom:10px;cursor:pointer;">
+        ${u.kycData.status === "pending" ? `
+            <br>
+            <button style="background:#22c55e;color:white;"
+                onclick="approveKYC('${u.kycData._id}','${u._id}')">
+                Approve KYC
+            </button>
+
+            <button style="background:#ef4444;color:white;"
+                onclick="rejectKYC('${u.kycData._id}','${u._id}')">
+                Reject KYC
+            </button>
+        ` : ""}
+        `;
+    }
+
+    document.getElementById("detail").innerHTML = `
+    <p><b>Username:</b> ${u.username}</p>
+    <p><b>Email:</b> ${u.email}</p>
+    <p><b>Phone:</b> ${u.phone}</p>
+    <p><b>Coins:</b> ${u.coins}</p>
+    <p><b>KYC Verified:</b> ${u.kycVerified ? "Yes ✅" : "No ❌"}</p>
+    <p><b>Last Seen:</b> ${u.lastSeen ? new Date(u.lastSeen).toLocaleString() : "N/A"}</p>
+    <p><b>Status:</b> ${u.isOnline ? "Online 🟢" : "Offline ⚫"}</p>
+
+    ${kycSection}
+
+    <hr>
+    <input type="number" id="addCoinInput" placeholder="Add coins">
+    <button onclick="addCoins('${u._id}')">Add Coins</button>
+    <br><br>
+<button style="background:#ef4444;color:white;"
+        onclick="deleteUser('${u._id}')">
+    Delete User
+</button>
+
+${u.isBanned ? `
+    <button style="background:#22c55e;color:white;"
+        onclick="unbanUser('${u._id}')">
+        Unban User
+    </button>
+` : `
+    <button style="background:#f59e0b;color:white;"
+        onclick="banUser('${u._id}')">
+        Ban User
+    </button>
+`}
+    `;
+});
+}
+function banUser(id){
+
+    const reason = prompt("Enter ban reason:");
+
+    if(!reason) return;
+
+    fetch(`http://localhost:3000/admin/ban/${id}`,{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ reason })
+    })
+    .then(()=> {
+        alert("User Banned");
+        loadUser(id);
+    });
+}
+
+function unbanUser(id){
+
+    fetch(`http://localhost:3000/admin/unban/${id}`,{
+        method:"POST"
+    })
+    .then(()=> {
+        alert("User Unbanned");
+        loadUser(id);
+    });
+}
+function deleteUser(id){
+
+    const confirmDelete = confirm("Are you sure? This will permanently delete the user.");
+
+    if(!confirmDelete) return;
+
+    fetch(`http://localhost:3000/admin/user/${id}`,{
+        method:"DELETE"
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        alert("User Deleted");
+        document.getElementById("detail").innerHTML = "Select a user";
+        loadUsers();
+        loadStats();
+    });
+}
+function openImage(src){
+    document.getElementById("modalImage").src = src;
+    document.getElementById("imageModal").style.display = "flex";
+}
+
+function closeModal(){
+    document.getElementById("imageModal").style.display = "none";
+}
+function verifyKYC(id){
+fetch(`http://localhost:3000/admin/verify-kyc/${id}`,{
+    method:"POST"
+})
+.then(()=> loadUser(id));
+}
+
+function addCoins(id){
+const coins = document.getElementById("addCoinInput").value;
+
+fetch(`http://localhost:3000/admin/add-coins/${id}`,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ coins })
+})
+.then(()=> loadUser(id));
+}
+
+loadUsers();
+
+</script>
+</body>
+</html>

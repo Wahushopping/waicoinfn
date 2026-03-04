@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wai Crypto Login</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI;
+    background:#0f172a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    color:white;
+}
+
+.login-card{
+    background:#1e293b;
+    padding:35px;
+    border-radius:14px;
+    width:100%;
+    max-width:400px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:25px;
+    color:#22c55e;
+}
+
+/* Floating input */
+.input-group{
+    position:relative;
+    margin-bottom:20px;
+}
+
+.input-group input{
+    width:94%;
+    padding:14px 12px;
+    border-radius:8px;
+    border:1px solid #334155;
+    background:#0f172a;
+    color:white;
+    font-size:14px;
+    outline:none;
+}
+
+.input-group label{
+    position:absolute;
+    left:12px;
+    top:14px;
+    font-size:14px;
+    color:#94a3b8;
+    pointer-events:none;
+    transition:0.3s ease;
+}
+
+/* 🔥 Floating animation */
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label{
+    top:-8px;
+    left:10px;
+    font-size:12px;
+    background:#1e293b;
+    padding:0 5px;
+    color:#22c55e;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    margin-top:10px;
+    transition:0.3s;
+}
+
+.btn-login{
+    background:#22c55e;
+    color:white;
+}
+
+.btn-login:hover{
+    background:#16a34a;
+}
+
+.signup-link{
+    display:block;
+    text-align:center;
+    margin-top:15px;
+    color:#22c55e;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.signup-link:hover{
+    text-decoration:underline;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+<h2>Wai Crypto Login</h2>
+<div id="banBox" style="
+display:none;
+background:#7f1d1d;
+padding:12px;
+border-radius:8px;
+margin-bottom:15px;
+font-size:14px;
+text-align:center;
+">
+    <div id="banMessage"></div>
+    <button id="contactBtn" style="
+        margin-top:10px;
+        background:#ef4444;
+        color:white;
+        padding:8px 12px;
+        border:none;
+        border-radius:6px;
+        cursor:pointer;
+        font-weight:bold;
+    ">
+        📩 Contact Admin
+    </button>
+</div>
+<form id="loginForm">
+
+<div class="input-group">
+<input type="email" id="email" placeholder=" " required>
+<label>Email Address</label>
+</div>
+
+<div class="input-group">
+<input type="password" id="password" placeholder=" " required>
+<label>Password</label>
+</div>
+
+<button type="submit" class="btn-login">
+Log In
+</button>
+
+</form>
+
+<a href="registration.html" class="signup-link">
+Create New Account
+</a>
+
+</div>
+<script>
+document.getElementById('loginForm').onsubmit = async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+
+        const response = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+
+            localStorage.setItem("token", result.token);
+            alert("Login Successful!");
+            window.location.href = 'index.html';
+
+        } else {
+
+            // 🔥 IF ACCOUNT BANNED
+            if (response.status === 403) {
+
+                document.getElementById("banBox").style.display = "block";
+                document.getElementById("banMessage").innerText = result.message;
+
+                // Hide login button
+                document.querySelector(".btn-login").style.display = "none";
+
+            } else {
+                alert(result.message);
+            }
+        }
+
+    } catch (error) {
+        alert("Server not running");
+    }
+};
+
+// 🔥 CONTACT ADMIN BUTTON
+document.getElementById("contactBtn").onclick = () => {
+
+    // Option 1: Open Email
+    window.location.href = "contact.html";
+
+    // Option 2: Open WhatsApp (example)
+    // window.open("https://wa.me/919999999999");
+
+};
+</script>
+
+</body>
+</html>

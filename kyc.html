@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>KYC Verification</title>
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: Segoe UI;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        input{
+            height: 24px;
+            width: 96%;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 10px;
+        }
+        
+        select{
+            height: 44px;
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 10px;
+        }
+
+        button {
+            height: 44px;
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+            padding: 10px;
+            background: #22c55e;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        video,
+        img {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .status {
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* 🔥 FOOTER STYLE */
+        .footer {
+            background: #0b1220;
+            margin-top: 60px;
+            padding: 40px 5% 20px;
+            color: #9ca3af;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .footer-logo h3 {
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #22c55e;
+        }
+
+        .footer-bottom {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 13px;
+            border-top: 1px solid #1f2937;
+            padding-top: 15px;
+        }
+        /* STEP CONTAINER */
+.step-box{
+    background:#111827;
+    padding:20px;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+/* Hide default file input */
+#docUpload{
+    display:none;
+}
+
+/* Custom upload button */
+.custom-file-upload{
+    display:block;
+    padding:14px;
+    border:2px dashed #22c55e;
+    border-radius:10px;
+    text-align:center;
+    cursor:pointer;
+    transition:0.3s;
+    font-size:14px;
+    color:#22c55e;
+    margin-top:10px;
+}
+
+.custom-file-upload:hover{
+    background:#22c55e;
+    color:black;
+}
+
+/* File name display */
+.file-name{
+    margin-top:10px;
+    font-size:13px;
+    color:#9ca3af;
+}
+
+/* Submit button */
+.submit-btn{
+    width:100%;
+    padding:12px;
+    margin-top:20px;
+    background:#22c55e;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.submit-btn:hover{
+    background:#16a34a;
+    transform:scale(1.02);
+}
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>KYC Verification</h2>
+
+        <div id="kycStatus"></div>
+
+        <div id="kycForm">
+
+            <!-- STEP 1 -->
+            <div id="step1">
+                <h3>Step 1: Personal Details</h3>
+
+                <input type="text" id="fullName" placeholder="Full Name">
+                <select id="documentType">
+                    <option>Aadhaar Card</option>
+                    <option>Voter Card</option>
+                    <option>Driving License</option>
+                    <option>Job Card</option>
+                </select>
+
+                <input type="text" id="documentNumber" placeholder="Document Number">
+                <input type="text" id="country" placeholder="Country">
+                <input type="text" id="state" placeholder="State">
+                <input type="text" id="place" placeholder="Place">
+                <input type="text" id="pincode" placeholder="Pincode">
+
+                <button onclick="goToStep2()">Next</button>
+            </div>
+
+            <!-- STEP 2 -->
+            <div id="step2" style="display:none;">
+                <h3>Step 2: Capture Live Photo</h3>
+
+                <video id="video" autoplay></video>
+                <button onclick="capturePhoto()">Capture Photo</button>
+                <img id="photoPreview">
+
+                <button onclick="goToStep3()">Next</button>
+            </div>
+
+            <!-- STEP 3 -->
+           <div id="step3" class="step-box" style="display:none;">
+    <h3>Step 3: Upload Document</h3>
+
+    <label for="docUpload" class="custom-file-upload">
+        📄 Click to Upload Document
+    </label>
+    <input type="file" id="docUpload" accept="image/*">
+
+    <div id="fileName" class="file-name"></div>
+
+    <button onclick="submitKYC()" class="submit-btn">
+        Submit KYC
+    </button>
+</div>
+        </div>
+
+    </div>
+    <footer class="footer" style="bottom: 0%;">
+
+        <div class="footer-container">
+
+            <div class="footer-logo">
+                <h3>Wai Crypto</h3>
+                <p>Secure • Transparent • Profitable</p>
+            </div>
+
+            <div class="footer-links">
+                <a href="https://t.me/yourchannel" target="_blank">Telegram Channel</a>
+                <a href="terms.html">Terms & Conditions</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="contact.html">Contact Us</a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 Wai Crypto. All Rights Reserved.
+        </div>
+
+    </footer>
+    <script>
+         let cameraStream = null;
+         let capturedImage = "";
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            window.location.href = "login.html";
+        }
+     function startCamera(){
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+        cameraStream = stream;
+        document.getElementById("video").srcObject = stream;
+    })
+    .catch(err=>{
+        alert("Camera permission denied");
+    });
+}
+function stopCamera(){
+
+    if(cameraStream){
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+}
+        // ================= CHECK EXISTING STATUS =================
+        function checkStatus() {
+
+            fetch("http://localhost:3000/kyc/status", {
+                headers: { Authorization: "Bearer " + token }
+            })
+                .then(res => res.json())
+                .then(data => {
+
+                    if (data.status === "pending") {
+                        document.getElementById("kycStatus").innerHTML =
+                            "<div class='status'>KYC Under Review ⏳</div>";
+                        document.getElementById("kycForm").style.display = "none";
+                    }
+
+                    if (data.status === "approved") {
+                        document.getElementById("kycStatus").innerHTML =
+                            "<div class='status'>KYC Approved ✅</div>";
+                        document.getElementById("kycForm").style.display = "none";
+
+                        setTimeout(() => {
+                            window.location.href = "sell.html";
+                        }, 2000);
+                    }
+
+                    if (data.status === "rejected") {
+                        document.getElementById("kycStatus").innerHTML =
+                            "<div class='status'>KYC Rejected ❌ Please Submit Again</div>";
+                    }
+                });
+        }
+
+    
+
+
+
+document.getElementById("docUpload").addEventListener("change", function(){
+    const file = this.files[0];
+    if(file){
+        document.getElementById("fileName").innerText =
+            "Selected: " + file.name;
+    }
+});
+        
+
+        function capturePhoto() {
+
+            const video = document.getElementById("video");
+
+            if (video.videoWidth === 0) {
+                alert("Camera not ready");
+                return;
+            }
+
+            const canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(video, 0, 0);
+
+            capturedImage = canvas.toDataURL("image/jpeg", 0.8);
+
+            document.getElementById("photoPreview").src = capturedImage;
+
+            alert("Photo captured successfully ✅");
+        }
+        // ================= STEP NAVIGATION =================
+
+        function goToStep2() {
+
+    if (!document.getElementById("fullName").value ||
+        !document.getElementById("documentNumber").value) {
+        alert("Please fill all details");
+        return;
+    }
+
+    document.getElementById("step1").style.display = "none";
+    document.getElementById("step2").style.display = "block";
+
+    startCamera(); // 🔥 Start camera only now
+}
+        function goToStep3() {
+
+    if (!capturedImage) {
+        alert("Please capture live photo");
+        return;
+    }
+
+    stopCamera(); // 🔥 Stop camera when leaving step 2
+
+    document.getElementById("step2").style.display = "none";
+    document.getElementById("step3").style.display = "block";
+}
+        // ================= SUBMIT KYC =================
+        function submitKYC() {
+
+            const file = document.getElementById("docUpload").files[0];
+
+            if (!file || !capturedImage) {
+                alert("Upload document and capture live photo");
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function () {
+
+                fetch("http://localhost:3000/kyc/submit", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        fullName: document.getElementById("fullName").value,
+                        documentType: document.getElementById("documentType").value,
+                        documentNumber: document.getElementById("documentNumber").value,
+                        country: document.getElementById("country").value,
+                        state: document.getElementById("state").value,
+                        place: document.getElementById("place").value,
+                        pincode: document.getElementById("pincode").value,
+                        livePhoto: capturedImage,
+                        documentPhoto: reader.result
+                    })
+                })
+                    .then(res => res.json())
+
+                    .then(data => {
+                        alert(data.message);
+
+                        if (data.success) {
+                            setTimeout(() => {
+                                window.location.href = "sell.html";
+                            }, 1500);
+                        }
+                    });
+            }
+
+            reader.readAsDataURL(file);
+        }
+
+        checkStatus();
+
+    </script>
+
+</body>
+
+</html>

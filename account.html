@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Status - Wahu</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-bg: #e0e0e0;
+            --text-dark: #333;
+            --accent-blue: #1877f2;
+            --accent-green: #4caf50;
+            --accent-orange: #ff9800;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); margin: 0; color: white; }
+
+        /* Navigation */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; border-bottom: 1px solid #333; }
+        .logo { font-size: 22px; font-weight: bold; color: white; text-decoration: none; }
+        .nav-links { display: flex; gap: 25px; list-style: none; }
+        .nav-links a { color: #ccc; text-decoration: none; }
+
+        /* Main Container */
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .page-title { margin-bottom: 30px; font-weight: 300; }
+
+        /* Layout Grid */
+        .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        /* Cards */
+        .card { background: var(--card-bg); border-radius: 15px; padding: 25px; color: var(--text-dark); }
+        .card h3 { margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 10px; font-style: italic; }
+
+        /* Info Rows */
+        .info-row { display: flex; justify-content: space-between; margin: 15px 0; font-size: 15px; }
+        .label { font-weight: bold; color: #666; }
+        .value { font-weight: 600; }
+
+        /* Status Badge */
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        .status-verified { background: var(--accent-green); color: white; }
+        .status-pending { background: var(--accent-orange); color: white; }
+
+        /* Financial Stats */
+        .stat-box { text-align: center; padding: 20px; border-radius: 10px; margin-top: 10px; }
+        .invest-box { background: #d1d1d1; border-left: 5px solid var(--accent-blue); }
+        .profit-box { background: #d1d1d1; border-left: 5px solid var(--accent-green); }
+        .big-number { font-size: 24px; font-weight: bold; display: block; margin-top: 5px; }
+        .profit-up { color: var(--accent-green); }
+          
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="home.html" class="logo">Wahu</a>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="#">Account Status</a>
+            <span style="color:var(--accent-green)">Balance: $400.00</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">Account Overview</h1>
+
+        <div class="status-grid">
+            <div class="card">
+                <h3>Profile Details</h3>
+                <div class="info-row">
+                    <span class="label">Username:</span>
+                    <span class="value">@wazid_ceo</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Phone:</span>
+                    <span class="value">+880 123456789</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Email:</span>
+                    <span class="value">mdwaz@example.com</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">KYC Status:</span>
+                    <span class="badge status-verified">Verified</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Investment Summary</h3>
+                <div class="stat-box invest-box">
+                    <span class="label">Total Invested</span>
+                    <span class="big-number">$350.00</span>
+                </div>
+                <div class="stat-box profit-box">
+                    <span class="label">Total Profit</span>
+                    <span class="big-number profit-up">+$50.00</span>
+                </div>
+                <div class="info-row" style="margin-top: 20px;">
+                    <span class="label">ROI:</span>
+                    <span class="value" style="color: var(--accent-green);">14.2% Increase</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

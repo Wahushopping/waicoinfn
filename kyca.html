@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>KYC Requests - Wai Crypto</title>
+<style>
+body {
+    margin:0;
+    font-family:Segoe UI;
+    background:#0f172a;
+    color:white;
+}
+
+header {
+    background:#111827;
+    padding:15px 5%;
+    font-size:20px;
+    font-weight:bold;
+    color:#22d3ee;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.container {
+    padding:30px 5%;
+}
+
+.kyc-card {
+    background:#1e293b;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+img {
+    width:120px;
+    border-radius:8px;
+    margin:10px 10px 10px 0;
+}
+
+button {
+    padding:8px 15px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-right:10px;
+    font-weight:bold;
+}
+
+.approve {
+    background:#22c55e;
+    color:white;
+}
+
+.reject {
+    background:#ef4444;
+    color:white;
+}
+
+.status-pending { color:orange; }
+.status-approved { color:#22c55e; }
+.status-rejected { color:#ef4444; }
+
+.back-btn {
+    background:#3b82f6;
+    color:white;
+}
+</style>
+</head>
+<body>
+
+<header>
+    KYC Management
+    <button class="back-btn" onclick="window.location.href='admin.html'">
+        Back to Dashboard
+    </button>
+</header>
+
+<div class="container">
+    <h2>Pending KYC Requests</h2>
+    <div id="kycList">Loading...</div>
+</div>
+
+<script>
+
+function loadKYC(){
+fetch("http://localhost:3000/admin/kyc")
+.then(res=>res.json())
+.then(data=>{
+
+    let html = "";
+
+    if(data.length === 0){
+        html = "<p>No KYC requests found.</p>";
+    }
+
+    data.forEach(k=>{
+
+        html += `
+        <div class="kyc-card">
+            <p><b>User:</b> ${k.userId.username}</p>
+            <p><b>Email:</b> ${k.userId.email}</p>
+            <p><b>Full Name:</b> ${k.fullName}</p>
+            <p><b>Document Type:</b> ${k.documentType}</p>
+            <p><b>Document Number:</b> ${k.documentNumber}</p>
+            <p><b>Status:</b> 
+                <span class="status-${k.status}">
+                    ${k.status.toUpperCase()}
+                </span>
+            </p>
+
+            <div>
+                <p><b>Live Photo:</b></p>
+                <img src="${k.livePhoto}">
+            </div>
+
+            <div>
+                <p><b>Document Photo:</b></p>
+                <img src="${k.documentPhoto}">
+            </div>
+
+            ${k.status === "pending" ? `
+                <button class="approve" onclick="approveKYC('${k._id}')">
+                    Approve
+                </button>
+                <button class="reject" onclick="rejectKYC('${k._id}')">
+                    Reject
+                </button>
+            ` : ""}
+        </div>
+        `;
+    });
+
+    document.getElementById("kycList").innerHTML = html;
+});
+}
+
+function approveKYC(id){
+fetch(`http://localhost:3000/admin/kyc/approve/${id}`,{
+    method:"POST"
+})
+.then(()=>{
+    alert("KYC Approved");
+    loadKYC();
+});
+}
+
+function rejectKYC(id){
+fetch(`http://localhost:3000/admin/kyc/reject/${id}`,{
+    method:"POST"
+})
+.then(()=>{
+    alert("KYC Rejected");
+    loadKYC();
+});
+}
+
+loadKYC();
+
+</script>
+</body>
+</html>

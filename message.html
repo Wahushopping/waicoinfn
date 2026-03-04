@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat</title>
+
+    <style>
+        body {
+            background: #0f172a;
+            font-family: Segoe UI;
+            margin: 0;
+            color: white;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #1e293b;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            height: 85vh;
+        }
+
+        .header {
+            padding: 15px;
+            background: #111827;
+            font-weight: bold;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            scrollbar-width: none;
+        }
+
+        .messages::-webkit-scrollbar {
+            display: none;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px;
+            margin: 6px 0;
+            border-radius: 12px;
+            word-wrap: break-word;
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .left {
+            background: #374151;
+            align-self: flex-start;
+        }
+
+        .right {
+            background: #22c55e;
+            align-self: flex-end;
+            color: black;
+        }
+
+        .message img {
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .time {
+            font-size: 11px;
+            margin-top: 4px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .status {
+            font-size: 11px;
+            margin-left: 5px;
+        }
+
+        /* Fullscreen Image Preview */
+        .preview {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .preview img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .input-area {
+
+            padding: 10px;
+            background: #111827;
+            display: flex;
+            gap: 5px;
+        }
+
+        .input-area input[type="text"] {
+
+            flex: 1;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+        }
+
+        .send-btn {
+
+            background: #22c55e;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header" id="chatHeader">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+
+                <div id="chatUserInfo">
+                    Loading...
+                </div>
+
+                <button id="openSendCoinBtn" onclick="toggleSendBox()" style="
+                display:none;
+                padding:6px 12px;
+                background:#ef4444;
+                border:none;
+                border-radius:6px;
+                font-size:12px;
+                font-weight:bold;
+                cursor:pointer;">
+                    💰 Send Coins
+                </button>
+                <button onclick="openReportBox(event)" style="
+padding:6px 12px;
+background:#f97316;
+border:none;
+border-radius:6px;
+font-size:12px;
+font-weight:bold;
+cursor:pointer;">
+                    🚨 Report
+                </button>
+            </div>
+        </div>
+
+
+
+
+
+
+
+        <div class="messages" id="chatBox"></div>
+
+        <!-- ✅ IMAGE PREVIEW (OUTSIDE input-area) -->
+        <div id="imagePreviewBox" style="
+    display:none;
+    background:#0b1220;
+    padding:10px;
+    border-top:1px solid #2a2f3a;
+">
+            <div style="display:flex;gap:10px;align-items:center;">
+                <img id="previewSelectedImage" style="width:70px;height:70px;object-fit:cover;border-radius:8px;">
+
+                <input type="text" id="imageCaption" placeholder="Add a caption..."
+                    style="flex:1;padding:8px;border-radius:6px;border:none;">
+
+                <button onclick="removeSelectedImage()"
+                    style="background:#ef4444;border:none;color:white;padding:6px 10px;border-radius:6px;">
+                    ✕
+                </button>
+                <button class="send-btn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+
+        <!-- ✅ NORMAL INPUT AREA -->
+        <div class="input-area" id="textInputArea">
+            <input type="text" id="messageInput" placeholder="Type message">
+            <input type="file" id="imageInput" accept="image/*" hidden>
+            <button class="send-btn" onclick="openImagePicker()"
+                style="font-size: xx-large;background-color: #ffffff;">🗐</button>
+            <button class="send-btn" onclick="sendMessage()" style="font-size: xx-large; width: 70px; ">➤</button>
+        </div>
+
+    </div>
+
+
+
+
+
+    <div class="preview" id="preview" onclick="closePreview()">
+        <img id="previewImg">
+    </div>
+    <div id="sendCoinBox" style="
+    position:fixed;
+    top:80px;
+    right:30px;
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
+    width:250px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    display:none;
+    z-index:999;
+">
+
+        <h4 style="margin:0 0 10px 0;">Send Coins</h4>
+
+        <input type="number" id="sendCoinInput" placeholder="Enter coins (7-20)" min="7" max="20"
+            style="width:93%;padding:8px;border-radius:6px;border:none;margin-bottom:8px;">
+
+        <button onclick="sendCoins()"
+            style="width:100%;padding:8px;background:#22c55e;border:none;border-radius:6px;font-weight:bold;margin-bottom:5px;">
+            Confirm
+        </button>
+
+        <button onclick="toggleSendBox()"
+            style="width:100%;padding:8px;background:#ef4444;border:none;border-radius:6px;color:white;">
+            Cancel
+        </button>
+
+    </div>
+
+
+
+    <!-- ✅ REPORT BOX (SEPARATE POPUP) -->
+    <div id="reportBox" style="
+position:fixed;
+top:140px;
+right:30px;
+background:#1e293b;
+padding:15px;
+border-radius:10px;
+width:260px;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+display:none;
+z-index:999;
+">
+
+        <h4 style="margin:0 0 10px 0;">Report User</h4>
+
+        <textarea id="reportReason" placeholder="Reason..."
+            style="width:100%;height:60px;padding:8px;border-radius:6px;border:none;margin-bottom:8px;"></textarea>
+
+        <button onclick="submitReport()"
+            style="width:100%;padding:8px;background:#ef4444;border:none;border-radius:6px;font-weight:bold;margin-bottom:5px;color:white;">
+            Submit Report
+        </button>
+
+        <button onclick="closeReportBox()"
+            style="width:100%;padding:8px;background:#334155;border:none;border-radius:6px;color:white;">
+            Cancel
+        </button>
+
+    </div>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
+    <script>
+
+        const token = localStorage.getItem("token");
+        const urlParams = new URLSearchParams(window.location.search);
+        const otherUserId = urlParams.get("seller");
+
+        function parseJwt(token) {
+            return JSON.parse(atob(token.split('.')[1]));
+        }
+
+        const myUserId = parseJwt(token).userId;
+
+        if (!token) {
+            window.location.href = "login.html";
+        }
+
+        /* 🔥 SOCKET REALTIME */
+        const socket = io("http://localhost:3000");
+
+        socket.emit("join", myUserId);
+
+        socket.on("receiveMessage", (msg) => {
+            if (
+                msg.senderId === otherUserId ||
+                msg.receiverId === otherUserId
+            ) {
+                loadMessages();
+            }
+        });
+
+
+
+
+
+       function openReportBox(event) {
+    event.stopPropagation();
+    document.getElementById("reportBox").style.display = "block";
+}
+
+function closeReportBox() {
+    document.getElementById("reportBox").style.display = "none";
+}
+
+async function submitReport() {
+
+    const btn = event.target;
+    btn.disabled = true;
+
+    const reason = document.getElementById("reportReason").value.trim();
+
+    if (!reason) {
+        alert("Please enter reason");
+        btn.disabled = false;
+        return;
+    }
+
+    try {
+
+        const res = await fetch("http://localhost:3000/report", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token
+            },
+            body: JSON.stringify({
+                reportedUserId: otherUserId,
+                reason
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Error reporting user");
+            btn.disabled = false;
+            return;
+        }
+
+        alert("User reported successfully. Chat blocked.");
+
+        // 🔥 Disable chat input permanently
+        document.getElementById("textInputArea").style.display = "none";
+
+        // 🔥 Hide report button after reporting
+        document.querySelector("[onclick^='openReportBox']").style.display = "none";
+
+        document.getElementById("reportReason").value = "";
+        closeReportBox();
+
+    } catch (err) {
+        alert("done");
+    }
+
+    btn.disabled = false;
+}
+
+
+
+
+
+        // LOAD SELLER INFO (Username + Price)
+        function loadSellerInfo() {
+
+            // 🔥 Check if I am active seller (show send button)
+            fetch(`http://localhost:3000/user/${myUserId}`, {
+                headers: { Authorization: "Bearer " + token }
+            })
+                .then(res => res.json())
+                .then(myData => {
+                    const btn = document.getElementById("openSendCoinBtn");
+                    btn.style.display = myData.active ? "block" : "none";
+                });
+
+            // 🔥 Load other user info
+            fetch(`http://localhost:3000/user/${otherUserId}`, {
+                headers: { Authorization: "Bearer " + token }
+            })
+                .then(res => res.json())
+                .then(data => {
+
+                    const onlineColor = data.isOnline ? "#22c55e" : "gray";
+                    const onlineText = data.isOnline ? "● Online" : "● Offline";
+
+                    let priceHtml = "";
+
+                    // ✅ Show price ONLY if user is active seller
+                    if (data.active && data.pricePerCoin) {
+                        priceHtml = `
+                <div style="font-size:12px;opacity:0.7;">
+                    ₹${data.pricePerCoin} per coin
+                </div>
+            `;
+                    }
+
+                    document.getElementById("chatUserInfo").innerHTML = `
+            <div style="font-weight:bold;">
+                ${data.username}
+            </div>
+
+            <div style="font-size:12px;color:${onlineColor};">
+                ${onlineText}
+            </div>
+
+            ${priceHtml}
+        `;
+                });
+        }
+        function toggleSendBox() {
+            const box = document.getElementById("sendCoinBox");
+            box.style.display = box.style.display === "block" ? "none" : "block";
+        }
+        function sendCoins() {
+
+            const coins = Number(document.getElementById("sendCoinInput").value);
+
+            // 🔥 Validation
+            if (!coins) {
+                alert("Enter coins amount");
+                return;
+            }
+
+            if (coins < 7) {
+                alert("Minimum send is 7 coins");
+                return;
+            }
+
+            if (coins > 20) {
+                alert("Maximum send is 20 coins");
+                return;
+            }
+
+            fetch("http://localhost:3000/coins/send", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({
+                    receiverId: otherUserId,
+                    coins: coins
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message);
+                    document.getElementById("sendCoinInput").value = "";
+                    toggleSendBox();
+                });
+        }
+        function openBuyBox() {
+            document.getElementById("buyBox").style.display = "flex";
+        }
+
+        function closeBuyBox() {
+            document.getElementById("buyBox").style.display = "none";
+        }
+
+        function buyCoins() {
+
+            const coins = document.getElementById("buyCoinsInput").value;
+
+            if (!coins || coins <= 0) {
+                alert("Enter valid coins");
+                return;
+            }
+
+            fetch(`http://localhost:3000/sell/buy/${otherUserId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({ coins })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message);
+                    closeBuyBox();
+                });
+        }
+        /* FORMAT TIME */
+        function formatTime(date) {
+            const d = new Date(date);
+            return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+
+        function openImagePicker() {
+            document.getElementById("imageInput").click();
+        }
+
+        document.getElementById("imageInput").addEventListener("change", function () {
+
+            const file = this.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                document.getElementById("previewSelectedImage").src = e.target.result;
+
+                // 🔥 Show image preview
+                document.getElementById("imagePreviewBox").style.display = "block";
+
+                // 🔥 Hide normal text input
+                document.getElementById("textInputArea").style.display = "none";
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        function removeSelectedImage() {
+            document.getElementById("imageInput").value = "";
+            document.getElementById("imageCaption").value = "";
+            document.getElementById("imagePreviewBox").style.display = "none";
+
+            // 🔥 Show normal input again
+            document.getElementById("textInputArea").style.display = "flex";
+        }
+        /* SEND MESSAGE */
+        function sendMessage() {
+
+            const textInput = document.getElementById("messageInput");
+            const captionInput = document.getElementById("imageCaption");
+            const fileInput = document.getElementById("imageInput");
+
+            const text = textInput.value.trim();
+            const caption = captionInput.value.trim();
+            const file = fileInput.files[0];
+
+            if (!text && !file) return;
+
+            // If image selected
+            if (file) {
+
+                const reader = new FileReader();
+
+                reader.onload = function () {
+                    sendToServer(caption, reader.result);
+
+                    removeSelectedImage();
+                    textInput.value = "";
+                    document.getElementById("textInputArea").style.display = "flex";
+                };
+
+                reader.readAsDataURL(file);
+
+            } else {
+
+                sendToServer(text, null);
+                textInput.value = "";
+            }
+        }
+        function sendToServer(text, image) {
+
+            fetch("http://localhost:3000/message/send", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({
+                    receiverId: otherUserId,
+                    text,
+                    image
+                })
+            })
+                .then(async res => {
+
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        alert(data.message);
+
+                        // If chat blocked or banned → disable input
+                        if (res.status === 403) {
+                            document.getElementById("textInputArea").style.display = "none";
+                        }
+
+                        return;
+                    }
+
+                    document.getElementById("messageInput").value = "";
+                    document.getElementById("imageInput").value = "";
+                })
+                .catch(() => {
+                    alert("Server error");
+                });
+        }
+        
+        
+        /* LOAD MESSAGES */
+        function loadMessages() {
+
+            fetch(`http://localhost:3000/message/${otherUserId}`, {
+                headers: { Authorization: "Bearer " + token }
+            })
+                .then(res => res.json())
+                .then(data => {
+
+                    let html = "";
+
+                    data.forEach(msg => {
+
+                        const side = msg.senderId === myUserId ? "right" : "left";
+
+                        html += `
+            <div class="message ${side}">
+               ${msg.image ? `
+    <img src="${msg.image}" onclick="openPreview('${msg.image}')">
+` : ""}
+
+${msg.text ? `
+    <div style="margin-top:5px;">
+        ${msg.text}
+    </div>
+` : ""}
+                <div class="time">
+                    ${formatTime(msg.createdAt)}
+                    ${side === "right" ? `<span class="status">✓✓</span>` : ""}
+                </div>
+            </div>
+            `;
+                    });
+
+                    const chatBox = document.getElementById("chatBox");
+                    chatBox.innerHTML = html;
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                });
+        }
+
+        /* IMAGE PREVIEW */
+        function openPreview(src) {
+            document.getElementById("previewImg").src = src;
+            document.getElementById("preview").style.display = "flex";
+        }
+        function closePreview() {
+            document.getElementById("preview").style.display = "none";
+        }
+        window.addEventListener("click", function (e) {
+
+            const sendBox = document.getElementById("sendCoinBox");
+            const reportBox = document.getElementById("reportBox");
+            const sendBtn = document.getElementById("openSendCoinBtn");
+
+            // Close Send Box
+            if (
+                sendBox.style.display === "block" &&
+                !sendBox.contains(e.target) &&
+                !sendBtn.contains(e.target)
+            ) {
+                sendBox.style.display = "none";
+            }
+
+            // Close Report Box
+            if (
+                reportBox.style.display === "block" &&
+                !reportBox.contains(e.target)
+            ) {
+                reportBox.style.display = "none";
+            }
+        });
+        loadSellerInfo();
+        loadMessages();
+
+    </script>
+
+</body>
+
+</html>

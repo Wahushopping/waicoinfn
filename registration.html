@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create New Account - Wai Crypto</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI;
+    background:#0f172a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    color:white;
+}
+
+.register-card{
+    background:#1e293b;
+    padding:35px;
+    border-radius:14px;
+    width:100%;
+    max-width:420px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+    color:#22c55e;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:8px;
+    border:1px solid #334155;
+    background:#0f172a;
+    color:white;
+    font-size:14px;
+}
+
+input:focus{
+    outline:none;
+    border-color:#22c55e;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    margin-top:15px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn-submit{
+    background:#22c55e;
+    color:white;
+    opacity:0.6;
+    cursor:not-allowed;
+}
+
+.btn-submit.active{
+    opacity:1;
+    cursor:pointer;
+}
+
+.btn-submit.active:hover{
+    background:#16a34a;
+}
+
+.footer-link{
+    display:block;
+    text-align:center;
+    margin-top:15px;
+    color:#22c55e;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.footer-link:hover{
+    text-decoration:underline;
+}
+
+/* Terms checkbox */
+.terms{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:10px;
+    font-size:13px;
+    color:#cbd5e1;
+}
+
+.terms input{
+    width:auto;
+    accent-color:#22c55e;
+}
+</style>
+</head>
+
+<body>
+
+<div class="register-card">
+
+<h2>Create Account</h2>
+
+<form id="registerForm">
+
+<input type="text" id="username" placeholder="Username" required>
+<input type="email" id="email" placeholder="Email Address" required>
+<input type="tel" id="phone" placeholder="Phone Number" required>
+<input type="password" id="password" placeholder="New Password" required>
+<input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+
+<div class="terms">
+<input type="checkbox" id="agreeTerms">
+<label for="agreeTerms">
+I agree to the <a href="terms.html" style="color:#22c55e;">Terms & Conditions</a>
+</label>
+</div>
+
+<button type="submit" id="submitBtn" class="btn-submit" disabled>
+Sign Up
+</button>
+
+</form>
+
+<a href="login.html" class="footer-link">
+Already have an account? Log In
+</a>
+
+</div>
+
+<script>
+
+const agreeCheckbox = document.getElementById("agreeTerms");
+const submitBtn = document.getElementById("submitBtn");
+
+agreeCheckbox.addEventListener("change",()=>{
+    if(agreeCheckbox.checked){
+        submitBtn.disabled = false;
+        submitBtn.classList.add("active");
+    }else{
+        submitBtn.disabled = true;
+        submitBtn.classList.remove("active");
+    }
+});
+
+document.getElementById('registerForm').onsubmit = async (e) => {
+    e.preventDefault();
+
+    if(!agreeCheckbox.checked){
+        alert("You must agree to Terms & Conditions");
+        return;
+    }
+
+    const userData = {
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        password: document.getElementById('password').value,
+        confirmPassword: document.getElementById('confirmPassword').value
+    };
+
+    if (userData.password !== userData.confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userData)
+        });
+
+        const result = await response.json();
+        alert(result.message);
+
+        if (response.ok) {
+            window.location.href = 'login.html';
+        }
+
+    } catch (error) {
+        alert("Error connecting to server.");
+    }
+};
+</script>
+
+</body>
+</html>

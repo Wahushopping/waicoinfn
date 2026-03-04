@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pending KYC - Wai Crypto</title>
+
+<style>
+body{margin:0;font-family:Segoe UI;background:#0f172a;color:white;}
+header{background:#111827;padding:15px 5%;color:#22d3ee;font-size:20px;font-weight:bold;}
+.container{padding:30px 5%;}
+.kyc-card{background:#1e293b;padding:20px;border-radius:10px;margin-bottom:20px;}
+img{width:120px;border-radius:8px;margin:10px 10px 10px 0;}
+.status{color:orange;font-weight:bold;}
+
+button{
+    padding:8px 15px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-right:10px;
+    font-weight:bold;
+}
+
+.approve{background:#22c55e;color:white;}
+.reject{background:#ef4444;color:white;}
+
+</style>
+</head>
+
+<body>
+
+<header>Pending KYC Requests</header>
+
+<div class="container">
+<div id="kycList">Loading...</div>
+</div>
+
+<script>
+
+function loadPendingKYC(){
+
+fetch("http://localhost:3000/admin/kyc?status=pending")
+.then(res=>res.json())
+.then(data=>{
+
+let html="";
+
+if(data.length===0){
+    html="<p>No pending KYC.</p>";
+}
+
+data.forEach(k=>{
+html+=`
+<div class="kyc-card" id="card-${k._id}">
+
+<p><b>User:</b> ${k.userId.username}</p>
+<p><b>Email:</b> ${k.userId.email}</p>
+<p><b>Full Name:</b> ${k.fullName}</p>
+<p><b>Document Type:</b> ${k.documentType}</p>
+<p><b>Document Number:</b> ${k.documentNumber}</p>
+<p><b>Country:</b> ${k.country}</p>
+<p><b>State:</b> ${k.state}</p>
+<p><b>Place:</b> ${k.place}</p>
+<p><b>Pincode:</b> ${k.pincode}</p>
+
+<p><b>Status:</b> <span class="status">PENDING</span></p>
+
+<img src="${k.livePhoto}">
+<img src="${k.documentPhoto}">
+
+<br><br>
+
+<button class="approve" onclick="approveKYC('${k._id}')">
+Approve
+</button>
+
+<button class="reject" onclick="rejectKYC('${k._id}')">
+Reject
+</button>
+
+</div>`;
+});
+
+document.getElementById("kycList").innerHTML=html;
+
+});
+}
+
+function approveKYC(id){
+
+    const card = document.getElementById("card-" + id);
+    if(!card) return;
+
+    const buttons = card.querySelectorAll("button");
+    buttons.forEach(btn=>{
+        btn.disabled = true;
+        btn.innerText = "Processing...";
+    });
+
+    fetch(`http://localhost:3000/admin/kyc/approve/${id}`,{
+        method:"POST"
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        if(data.message){
+            card.style.transition = "0.3s";
+            card.style.opacity = "0";
+            setTimeout(()=> card.remove(), 300);
+        }
+    })
+    .catch(()=>{
+        alert("Error occurred");
+        loadPendingKYC();
+    });
+}
+
+function rejectKYC(id){
+
+    const card = document.getElementById("card-" + id);
+    if(!card) return;
+
+    const buttons = card.querySelectorAll("button");
+    buttons.forEach(btn=>{
+        btn.disabled = true;
+        btn.innerText = "Processing...";
+    });
+
+    fetch(`http://localhost:3000/admin/kyc/reject/${id}`,{
+        method:"POST"
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        if(data.message){
+            card.style.transition = "0.3s";
+            card.style.opacity = "0";
+            setTimeout(()=> card.remove(), 300);
+        }
+    })
+    .catch(()=>{
+        alert("Error occurred");
+        loadPendingKYC();
+    });
+}
+
+loadPendingKYC();
+
+</script>
+
+</body>
+</html>

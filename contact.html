@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contact Us - Wai Crypto</title>
+
+<style>
+body{
+    font-family:Segoe UI;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+.container{
+    max-width:600px;
+    margin:50px auto;
+    background:#1e293b;
+    padding:40px;
+    border-radius:12px;
+}
+h1{
+    color:#22c55e;
+}
+input, textarea{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:8px;
+    border:none;
+    background:#111827;
+    color:white;
+}
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#22c55e;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+}
+button:hover{
+    background:#16a34a;
+}
+a{
+    color:#22c55e;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Contact Us</h1>
+
+<p>If you need help or support, please contact us.</p>
+
+<form id="contactForm">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="email" id="email" placeholder="Your Email" required>
+    <textarea rows="5" id="message" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+</form>
+
+<p style="margin-top:20px;">
+    Note: Please use the email address associated with your account and include your username in your message for a faster response. Providing your username will help us resolve your account issues more efficiently.
+</p>
+<p><a href="index.html">Back to Dashboard</a></p>
+
+</div>
+<script>
+document.getElementById("contactForm").onsubmit = async function(e){
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    try {
+        const res = await fetch("http://localhost:3000/contact",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({ name, email, message })
+        });
+
+        const data = await res.json();
+
+        alert(data.message);
+
+        if(res.ok){
+            document.getElementById("contactForm").reset();
+        }
+
+    } catch(err){
+        alert("Server error");
+    }
+}
+</script>
+</body>
+</html>

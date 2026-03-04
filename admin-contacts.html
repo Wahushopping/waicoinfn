@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin - Contact Messages</title>
+<style>
+body{
+    background:#0f172a;
+    color:white;
+    font-family:Segoe UI;
+}
+.container{
+    max-width:800px;
+    margin:40px auto;
+}
+.card{
+    background:#1e293b;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>Contact Messages</h2>
+<div id="messageList">Loading...</div>
+</div>
+
+<script>
+async function loadMessages(){
+
+    const res = await fetch("http://localhost:3000/admin/contacts");
+    const data = await res.json();
+
+    let html = "";
+
+    if(data.length === 0){
+        html = "<p>No messages yet.</p>";
+    }
+
+    data.forEach(m=>{
+    html += `
+    <div class="card" id="card-${m._id}">
+        <p><b>Name:</b> ${m.name}</p>
+        <p><b>Email:</b> ${m.email}</p>
+        <p><b>Message:</b><br>${m.message}</p>
+
+        <p style="font-size:12px;color:gray;">
+            ${new Date(m.createdAt).toLocaleString()}
+        </p>
+
+        <button onclick="deleteMessage('${m._id}')"
+            style="background:#ef4444;color:white;padding:6px 12px;border:none;border-radius:6px;cursor:pointer;">
+            Delete
+        </button>
+    </div>
+    `;
+});
+
+    document.getElementById("messageList").innerHTML = html;
+}
+async function deleteMessage(id){
+
+    const confirmDelete = confirm("Delete this message?");
+    if(!confirmDelete) return;
+
+    const res = await fetch(
+        `http://localhost:3000/admin/contact/${id}`,
+        { method:"DELETE" }
+    );
+
+    if(res.ok){
+        document.getElementById("card-"+id).remove();
+        alert("Message deleted");
+    } else {
+        alert("Delete failed");
+    }
+}
+loadMessages();
+</script>
+
+</body>
+</html>

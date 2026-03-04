@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wai Crypto Dashboard</title>
+
+<style>
+body{
+    font-family:Segoe UI;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+.top-bar{
+    background:#111827;
+    padding:15px 5%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-weight:bold;
+    font-size:18px;
+}
+
+.nav-links{
+    display:flex;
+    gap:20px;
+}
+
+.nav-item{
+    position:relative;
+}
+
+.nav-btn{
+    text-decoration:none;
+    color:white;
+    padding:8px 16px;
+    background:#1f2937;
+    border-radius:8px;
+    transition:0.3s;
+    font-size:14px;
+}
+
+.nav-btn:hover{
+    background:#22c55e;
+    color:black;
+}
+
+.balance{
+    color:#22c55e;
+    font-weight:bold;
+}
+.card{
+    background:#1e293b;
+    max-width:600px;
+    margin:50px auto;
+    padding:30px;
+    border-radius:12px;
+}
+.coin-count{
+    font-size:60px;
+    font-weight:bold;
+}
+.top-bar{
+    background:#111827;
+    padding:15px 5%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-weight:bold;
+    font-size:18px;
+}
+
+.nav-links{
+    display:flex;
+    gap:20px;
+}
+
+.nav-item{
+    position:relative;
+}
+
+.nav-btn{
+    text-decoration:none;
+    color:white;
+    padding:8px 16px;
+    background:#1f2937;
+    border-radius:8px;
+    transition:0.3s;
+    font-size:14px;
+}
+
+.nav-btn:hover{
+    background:#22c55e;
+    color:black;
+}
+
+.balance{
+    color:#22c55e;
+    font-weight:bold;
+}
+@keyframes pulse{
+    0%{ transform:scale(1); opacity:1;}
+    50%{ transform:scale(1.4); opacity:0.7;}
+    100%{ transform:scale(1); opacity:1;}
+}
+.portfolio-row{
+    display:flex;
+    justify-content:space-between;
+    margin-top:10px;
+    font-size:15px;
+    opacity:0.9;
+}
+
+.total-usd{
+    margin-top:15px;
+    font-weight:bold;
+    font-size:18px;
+    color:#22c55e;
+}
+select{
+    padding:6px 10px;
+    border-radius:6px;
+    border:none;
+    background:#111827;
+    color:white;
+}
+.portfolio-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.graph-link img{
+    width:200px;
+    height:auto;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.graph-link img:hover{
+    transform:scale(1.05);
+}
+/* 🔥 FORM INPUT STYLE */
+.card input{
+    width:95.5%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:8px;
+    border:none;
+    background:#111827;
+    color:white;
+    font-size:14px;
+    outline:none;
+}
+
+.card input:focus{
+    border:1px solid #22c55e;
+}
+
+/* 🔥 BUTTON STYLE */
+.card button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    background:#22c55e;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.card button:hover{
+    background:#16a34a;
+    transform:scale(1.02);
+}
+
+/* 🔥 Secondary button (Copy button) */
+#codeContainer button{
+    background:#1f2937;
+    color:white;
+}
+
+#codeContainer button:hover{
+    background:#374151;
+}
+
+/* 🔥 Generated code style */
+#generatedCode{
+    background:#111827;
+    padding:10px;
+    border-radius:8px;
+    text-align:center;
+    margin-top:10px;
+    letter-spacing:2px;
+}
+/* 🔥 FOOTER STYLE */
+.footer{
+    background:#0b1220;
+    margin-top:60px;
+    padding:40px 5% 20px;
+    color:#9ca3af;
+}
+
+.footer-container{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:30px;
+}
+
+.footer-logo h3{
+    color:white;
+    margin-bottom:8px;
+}
+
+.footer-links{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.footer-links a{
+    color:#9ca3af;
+    text-decoration:none;
+    font-size:14px;
+    transition:0.3s;
+}
+
+.footer-links a:hover{
+    color:#22c55e;
+}
+
+.footer-bottom{
+    margin-top:30px;
+    text-align:center;
+    font-size:13px;
+    border-top:1px solid #1f2937;
+    padding-top:15px;
+}
+/* 🔥 3 DOT MENU STYLE */
+.menu-wrapper{
+    position:relative;
+}
+
+.menu-icon{
+    font-size:22px;
+    cursor:pointer;
+    padding:6px 10px;
+    border-radius:6px;
+    transition:0.3s;
+}
+
+.menu-icon:hover{
+    background:#1f2937;
+}
+
+.dropdown-menu{
+    position:absolute;
+    right:0;
+    top:35px;
+    background:#1e293b;
+    border-radius:8px;
+    display:none;
+    flex-direction:column;
+    min-width:120px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.5);
+    overflow:hidden;
+}
+
+.dropdown-menu button{
+    background:none;
+    border:none;
+    color:white;
+    padding:12px;
+    text-align:left;
+    cursor:pointer;
+    width:100%;
+}
+
+.dropdown-menu button:hover{
+    background:#ef4444;
+}
+.user-info{
+    padding:12px;
+    font-weight:bold;
+    border-bottom:1px solid #334155;
+    background:#111827;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+    <div class="logo">Wai Crypto</div>
+
+    <div class="nav-links">
+        <div class="nav-item">
+            <a href="buy.html" class="nav-btn">Buy Coins</a>
+        </div>
+
+        <div class="nav-item">
+            <a href="sell.html" class="nav-btn" style="background:#fd1e43;">Sell Coins</a>
+        </div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:20px;">
+        <div class="balance" id="balanceDisplay">Balance: ₹0</div>
+
+        <!-- 🔥 3 DOT MENU -->
+        <div class="menu-wrapper">
+            <div class="menu-icon" onclick="toggleMenu()">⋮</div>
+
+            <div class="dropdown-menu" id="dropdownMenu">
+
+    <div class="user-info" id="dropdownUsername">
+        Loading...
+    </div>
+
+    <button onclick="logout()">Logout</button>
+
+</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>My Portfolio</h2>
+
+    <div class="portfolio-top">
+
+    <div class="coin-count" id="coinCount">
+        0 coins
+    </div>
+
+    <a href="price-graph.html" class="graph-link">
+        <img src="image/images.png" alt="Price Graph">
+    </a>
+
+</div>
+    <div style="margin:15px 0;">
+        <label>Select Currency:</label>
+        <select id="currencySelect" onchange="updateCurrency()">
+            
+            <option value="INR">India (₹)</option>
+            <option value="USD">USA ($)</option>
+            <option value="EUR">Euro (€)</option>
+            <option value="RUB">Russia (₽)</option>
+            <option value="CNY">China (¥)</option>
+            <option value="AED">UAE (د.إ)</option>
+        </select>
+    </div>
+
+    <div class="portfolio-row">
+        <span>Per Coin Price</span>
+        <span id="coinPriceDisplay">₹0</span>
+    </div>
+
+    <div class="portfolio-row total-usd">
+        <span>Total Value</span>
+        <span id="totalValueDisplay">₹0</span>
+    </div>
+</div>
+<div class="card" id="sendCoinsCard" style="display:none;"> 
+    <h3>Send Coins</h3>
+
+    <input type="email" id="receiverEmail" placeholder="Receiver Email">
+
+    <input type="number" id="transferAmount" placeholder="Enter Amount">
+
+    <button onclick="createTransfer()">Generate Transfer Code</button>
+
+    <div id="codeContainer" style="display:none;">
+        <p id="generatedCode"></p>
+        <button onclick="copyCode()">Copy Code</button>
+    </div>
+</div>
+
+<div class="card" id="kycMessageCard" style="display:none; text-align:center;">
+    <h3 id="kycMessageTitle"></h3>
+    <p id="kycMessageText" style="margin:15px 0;"></p>
+    <button id="kycActionBtn" onclick="goToKYC()"></button>
+</div>
+
+<div class="card">
+    <h3>Receive Coins</h3>
+
+    <input type="text" id="redeemCode" placeholder="Enter Transfer Code">
+
+    <button onclick="redeemTransfer()">Redeem Coins</button>
+</div>
+
+
+<div class="card">
+    <h3>Price Prediction</h3>
+
+    <div id="predictionBox" style="text-align:center; margin-top:15px;">
+
+        <div style="font-size:18px;">Next Estimated Price</div>
+
+        <div id="predictedPrice" 
+             style="font-size:28px; font-weight:bold; margin:10px 0;">
+             ₹0
+        </div>
+
+        <div id="predictionChange" style="font-size:16px;">
+            0%
+        </div>
+
+        <button onclick="generatePrediction()">
+            Generate Prediction
+        </button>
+
+    </div>
+    
+</div>
+<div class="card">
+    <h2>Daily Profit Example (1% Per Day)</h2>
+
+    <div id="profitBox" style="margin-top:15px; font-size:16px; line-height:1.6;">
+        
+
+        <p><b>Coin Price:</b> ₹<span id="coinBase">100</span></p>
+        <p><b>Daily Profit (1%):</b> ₹<span id="dailyProfit">1</span></p>
+        <p><b>Monthly Profit (30 Days - 30%):</b> ₹<span id="monthlyProfit">30</span></p>
+        <p><b>Yearly Profit (365 Days - 365%):</b> ₹<span id="yearlyProfit">365</span></p>
+
+        
+        <hr style="margin:15px 0; border:1px solid #333;">
+
+        <p><b>You have Coins:</b> 50</p>
+        <p><b>Daily Profit:</b> ₹50</p>
+        <p><b>Monthly Profit:</b> ₹1500</p>
+        <p><b>Yearly Profit:</b> ₹36500</p>
+
+    </div>
+</div>
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div class="footer-logo">
+            <h3>Wai Crypto</h3>
+            <p>Secure • Transparent • Profitable</p>
+        </div>
+
+        <div class="footer-links">
+            <a href="https://t.me/waicoins" target="_blank">Telegram Channel</a>
+            <a href="terms.html">Terms & Conditions</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2025 Wai Crypto. All Rights Reserved.
+    </div>
+
+</footer>
+<script>
+    // 🔐 LOGIN CHECK (AUTO REDIRECT)
+
+const token = localStorage.getItem("token");
+
+if (!token) {
+    window.location.href = "login.html";
+}
+
+// Optional: Check if token expired
+try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const now = Date.now() / 1000;
+
+    if (payload.exp && payload.exp < now) {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+    }
+} catch (err) {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+    // 🔥 GLOBAL VARIABLES
+let globalCoins = 0;
+let globalPriceINR = 0;
+
+// 🔥 Currency Conversion Table
+const currencyRates = {
+    INR: { rate: 1, symbol: "₹" },
+    USD: { rate: 0.012, symbol: "$" },
+    EUR: { rate: 0.011, symbol: "€" },
+    RUB: { rate: 1.1, symbol: "₽" },
+    CNY: { rate: 0.086, symbol: "¥" },
+    AED: { rate: 0.044, symbol: "د.إ" }
+};
+function updateCurrency(){
+
+    const selected = document.getElementById("currencySelect").value;
+    const currency = currencyRates[selected];
+
+    const convertedPrice = globalPriceINR * currency.rate;
+    const totalValue = globalCoins * convertedPrice;
+
+    document.getElementById("coinPriceDisplay").innerText =
+        currency.symbol + convertedPrice.toFixed(2);
+
+    document.getElementById("totalValueDisplay").innerText =
+        currency.symbol + totalValue.toFixed(2);
+
+    document.getElementById("balanceDisplay").innerText =
+        "Balance: " + currency.symbol + totalValue.toFixed(2);
+}
+              function createTransfer(){
+
+    const receiverEmail = document.getElementById("receiverEmail").value;
+    const coins = document.getElementById("transferAmount").value;
+
+    fetch("http://localhost:3000/transfer/create", {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            Authorization:"Bearer " + localStorage.getItem("token")
+        },
+        body: JSON.stringify({ receiverEmail, coins })
+    })
+    .then(res=>res.json())
+    .then(data=>{
+
+        if(data.code){
+
+            document.getElementById("generatedCode").innerText =
+                data.code;
+
+            document.getElementById("codeContainer").style.display = "block";
+
+        } else {
+            alert(data.message);
+        }
+
+    });
+}
+// 🔥 Profit Calculation Example
+
+function calculateProfitExample(){
+
+    const coinPriceINR = 100;     // base price
+    const dailyPercent = 1;       // 1% per day
+    const usdRate = 0.012;        // 1 INR = 0.012 USD
+
+    const dailyProfitINR = coinPriceINR * dailyPercent / 100;
+    const monthlyProfitINR = dailyProfitINR * 30;
+
+    const coinPriceUSD = coinPriceINR * usdRate;
+    const dailyProfitUSD = dailyProfitINR * usdRate;
+    const monthlyProfitUSD = monthlyProfitINR * usdRate;
+
+    document.getElementById("coinBase").innerText =
+        coinPriceINR.toFixed(2);
+
+    document.getElementById("dailyProfit").innerText =
+        dailyProfitINR.toFixed(2);
+
+    document.getElementById("monthlyProfit").innerText =
+        monthlyProfitINR.toFixed(2);
+
+    
+}
+
+calculateProfitExample();
+function generatePrediction(){
+
+    // Simple random prediction logic
+    const currentPrice = globalPriceINR;
+
+    if(!currentPrice){
+        alert("Price not loaded yet");
+        return;
+    }
+
+    // Random change between -5% to +5%
+    const randomPercent = (Math.random() * 10 - 5).toFixed(2);
+
+    const predicted =
+        currentPrice + (currentPrice * randomPercent / 100);
+
+    const isUp = randomPercent >= 0;
+
+    document.getElementById("predictedPrice").innerText =
+        "₹" + predicted.toFixed(2);
+
+    const changeText =
+        (isUp ? "+" : "") + randomPercent + "%";
+
+    const changeEl = document.getElementById("predictionChange");
+
+    changeEl.innerText = changeText;
+    changeEl.style.color = isUp ? "#22c55e" : "#ef4444";
+}
+
+function redeemTransfer(){
+
+    const code = document.getElementById("redeemCode").value;
+
+    fetch("http://localhost:3000/transfer/redeem", {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            Authorization:"Bearer " + localStorage.getItem("token")
+        },
+        body: JSON.stringify({ code })
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        alert(data.message);
+        loadCoins(); // refresh balance
+    });
+}
+function copyCode(){
+
+    const codeText = document.getElementById("generatedCode").innerText;
+
+    navigator.clipboard.writeText(codeText)
+    .then(() => {
+        alert("Code copied successfully ✅");
+    })
+    .catch(() => {
+        alert("Copy failed ❌");
+    });
+}
+// 🔥 Toggle Dropdown
+function toggleMenu(){
+    const menu = document.getElementById("dropdownMenu");
+    menu.style.display =
+        menu.style.display === "flex" ? "none" : "flex";
+}
+
+// 🔥 Logout Function
+function logout(){
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+
+// 🔥 Close menu if clicked outside
+window.onclick = function(event){
+    if(!event.target.closest('.menu-wrapper')){
+        document.getElementById("dropdownMenu").style.display = "none";
+    }
+}
+function checkKYCStatus(){
+
+    fetch("http://localhost:3000/kyc/status", {
+        headers:{
+            Authorization: "Bearer " + token
+        }
+    })
+    .then(res=>res.json())
+    .then(data=>{
+
+        const sendCard = document.getElementById("sendCoinsCard");
+        const msgCard = document.getElementById("kycMessageCard");
+
+        const title = document.getElementById("kycMessageTitle");
+        const text = document.getElementById("kycMessageText");
+        const btn = document.getElementById("kycActionBtn");
+
+        sendCard.style.display = "none";
+        msgCard.style.display = "block";
+
+        if(data.status === "approved"){
+
+            sendCard.style.display = "block";
+            msgCard.style.display = "none";
+            return;
+        }
+
+        if(data.status === "pending"){
+
+            title.innerText = "KYC Under Review ⏳";
+            text.innerText = "Your KYC is being reviewed. You cannot send coins right now.";
+            btn.style.display = "none";
+        }
+
+        else if(data.status === "rejected"){
+
+            title.innerText = "KYC Rejected ❌";
+            text.innerText = "Your KYC was rejected. Please resubmit.";
+            btn.innerText = "Retry KYC";
+            btn.style.display = "block";
+        }
+
+        else{
+
+            title.innerText = "KYC Required ⚠";
+            text.innerText = "Complete KYC to enable coin transfers.";
+            btn.innerText = "Complete KYC";
+            btn.style.display = "block";
+        }
+
+    })
+    .catch(err=>console.log(err));
+}
+function goToKYC(){
+    window.location.href = "kyc.html";
+}
+function loadCoins() {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    Promise.all([
+        fetch("http://localhost:3000/my-coins", {
+            headers: { Authorization: "Bearer " + token }
+        }),
+        fetch("http://localhost:3000/coin-price")
+    ])
+    .then(async ([coinsRes, priceRes]) => {
+
+        if (coinsRes.status === 401) {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+            return;
+        }
+
+        const coinsData = await coinsRes.json();
+        const priceData = await priceRes.json();
+
+        globalCoins = coinsData.coins || 0;
+        globalPriceINR = priceData.price || 85;
+
+        document.getElementById("coinCount").innerText =
+            globalCoins + " Coins";
+
+        updateCurrency(); // 🔥 automatically convert
+    })
+    .catch(err => console.log(err));
+}
+function loadLoggedInUser(){
+
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        document.getElementById("dropdownUsername").innerText =
+            payload.username || "User";
+    } catch {
+        document.getElementById("dropdownUsername").innerText = "User";
+    }
+}
+
+loadLoggedInUser();
+loadCoins();
+function checkMessages(){
+
+    const token = localStorage.getItem("token");
+
+    fetch("http://localhost:3000/message/inbox",{
+        headers:{ Authorization:"Bearer "+token }
+    })
+    .then(res=>res.json())
+    .then(data=>{
+
+        if(data.length > 0){
+            document.getElementById("buyDot").style.display="block";
+            document.getElementById("sellDot").style.display="block";
+        } else {
+            document.getElementById("buyDot").style.display="none";
+            document.getElementById("sellDot").style.display="none";
+        }
+
+    });
+}
+checkKYCStatus();
+checkMessages();
+setInterval(checkMessages, 5000);
+setInterval(loadCoins, 5000);
+</script>
+
+</body>
+</html>

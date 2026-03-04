@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sell Coins</title>
+<style>
+body{background:#0f172a;color:white;font-family:Segoe UI;}
+.container{max-width:600px;margin:40px auto;background:#1e293b;padding:30px;border-radius:12px;}
+input,button{width:100%;padding:8px;margin:8px 0;}
+.status{padding:10px;margin-bottom:15px;}
+/* 🔥 FOOTER STYLE */
+.footer{
+    background:#0b1220;
+    margin-top:60px;
+    padding:40px 5% 20px;
+    color:#9ca3af;
+}
+
+.footer-container{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:30px;
+}
+
+.footer-logo h3{
+    color:white;
+    margin-bottom:8px;
+}
+
+.footer-links{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.footer-links a{
+    color:#9ca3af;
+    text-decoration:none;
+    font-size:14px;
+    transition:0.3s;
+}
+
+.footer-links a:hover{
+    color:#22c55e;
+}
+
+.footer-bottom{
+    margin-top:30px;
+    text-align:center;
+    font-size:13px;
+    border-top:1px solid #1f2937;
+    padding-top:15px;
+}
+/* 🔥 TOP BAR */
+.top-bar{
+    background:#111827;
+    padding:15px 5%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-weight:bold;
+    font-size:18px;
+}
+
+.nav-links{
+    display:flex;
+    gap:20px;
+}
+
+.nav-btn{
+    text-decoration:none;
+    color:white;
+    padding:8px 16px;
+    background:#1f2937;
+    border-radius:8px;
+    transition:0.3s;
+    font-size:14px;
+}
+
+.nav-btn:hover{
+    background:#22c55e;
+    color:black;
+}
+
+.balance{
+    color:#22c55e;
+    font-weight:bold;
+}
+
+/* 🔥 3 DOT MENU */
+.menu-wrapper{
+    position:relative;
+}
+
+.menu-icon{
+    font-size:22px;
+    cursor:pointer;
+    padding:6px 10px;
+    border-radius:6px;
+    transition:0.3s;
+}
+
+.menu-icon:hover{
+    background:#1f2937;
+}
+
+.dropdown-menu{
+    position:absolute;
+    right:0;
+    top:35px;
+    background:#1e293b;
+    border-radius:8px;
+    display:none;
+    flex-direction:column;
+    min-width:120px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.5);
+    z-index:100;
+}
+
+.dropdown-menu button{
+    background:none;
+    border:none;
+    color:white;
+    padding:12px;
+    text-align:left;
+    cursor:pointer;
+    width:100%;
+}
+
+.dropdown-menu button:hover{
+    background:#ef4444;
+}
+.message-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 0;
+    border-bottom:1px solid #2a2f3a;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.message-row:hover{
+    background:#111827;
+    padding-left:8px;
+}
+
+.new-badge{
+    background:#ef4444;
+    color:white;
+    font-size:12px;
+    padding:4px 10px;
+    border-radius:20px;
+    font-weight:bold;
+}
+.message-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid #2a2f3a;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.message-row:hover{
+    background:#111827;
+    padding-left:8px;
+}
+
+.new-badge{
+    background:#ef4444;
+    color:white;
+    min-width:22px;
+    height:22px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:bold;
+}
+/* 🔥 SELL SECTION STYLE */
+.sell-card{
+    background:#0f172a;
+    padding:20px;
+    border-radius:12px;
+    border:1px solid #2a2f3a;
+    margin-top:15px;
+}
+
+.sell-card label{
+    font-size:14px;
+    color:#9ca3af;
+    display:block;
+    margin-bottom:6px;
+}
+
+.price-input{
+    width:95%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #334155;
+    background:#111827;
+    color:white;
+    font-size:15px;
+    outline:none;
+}
+
+.price-input:focus{
+    border-color:#22c55e;
+}
+
+.primary-btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#22c55e;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+    margin-top:10px;
+}
+
+.primary-btn:hover{
+    background:#16a34a;
+}
+
+.status-box{
+    margin-top:20px;
+    padding:15px;
+    background:#111827;
+    border-radius:10px;
+    border:1px solid #2a2f3a;
+}
+
+.toggle-btn{
+    padding:8px 18px;
+    border:none;
+    border-radius:8px;
+    background:#ef4444;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.toggle-btn.active{
+    background:#22c55e;
+}
+</style>
+</head>
+
+<body>
+<div class="top-bar">
+    <div class="logo">Wai Crypto</div>
+
+    <div class="nav-links">
+        <a href="index.html" class="nav-btn">Dashboard</a>
+        <a href="buy.html" class="nav-btn" style="background:#0f9b32;">Buy Coins</a>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:20px;">
+        <div class="balance" id="balanceDisplay">Coin: ₹0</div>
+
+        <div class="menu-wrapper">
+            <div class="menu-icon" onclick="toggleMenu()">⋮</div>
+
+            <div class="dropdown-menu" id="dropdownMenu">
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+
+<h2>Sell Coins</h2>
+
+<div id="kycSection"></div>
+<div id="sellSection" style="display:none;"></div>
+<div id="historySection"></div>
+<div id="messageSection" style="margin-top:30px;"></div>
+</div>
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div class="footer-logo">
+            <h3>Wai Crypto</h3>
+            <p>Secure • Transparent • Profitable</p>
+        </div>
+
+        <div class="footer-links">
+            <a href="https://t.me/waicoins" target="_blank">Telegram Channel</a>
+            <a href="terms.html">Terms & Conditions</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2025 Wai Crypto. All Rights Reserved.
+    </div>
+
+</footer>
+<script>
+
+const token = localStorage.getItem("token");
+
+if (!token) {
+    window.location.href = "login.html";
+}
+function loadKYC() {
+
+    fetch("http://localhost:3000/kyc/status",{
+        headers:{ Authorization:"Bearer "+token }
+    })
+    .then(res=>res.json())
+    .then(data=>{
+
+        const kycBox = document.getElementById("kycSection");
+        const sellBox = document.getElementById("sellSection");
+
+        // 🔴 NOT SUBMITTED
+        if(data.status === "not_submitted"){
+
+            sellBox.style.display = "none";   // hide sell
+
+            kycBox.innerHTML = `
+                <div class='status'>
+                    <b>KYC Required</b><br><br>
+                    <a href="kyc.html" style="color:#22c55e;">
+                        Click here to complete your KYC
+                    </a>
+                </div>
+            `;
+            return;
+        }
+
+        // 🟡 UNDER REVIEW
+        if(data.status === "pending"){
+
+            sellBox.style.display = "none";   // hide sell
+
+            kycBox.innerHTML = `
+                <div class='status' style="color:#facc15;">
+                    <b>KYC Under Review</b><br><br>
+                    Please wait for admin approval.
+                </div>
+            `;
+            return;
+        }
+
+        // 🔴 REJECTED
+        if(data.status === "rejected"){
+
+            sellBox.style.display = "none";   // hide sell
+
+            kycBox.innerHTML = `
+                <div class='status' style="color:#ef4444;">
+                    <b>KYC Rejected</b><br><br>
+                    Please resubmit your KYC.<br><br>
+
+                    <a href="kyc.html" style="color:#22c55e;">
+                        Resubmit KYC
+                    </a>
+                </div>
+            `;
+            return;
+        }
+
+        // 🟢 APPROVED
+        if(data.status === "approved"){
+
+            kycBox.innerHTML = "";                 // hide KYC section
+            sellBox.style.display = "block";      // show sell section
+
+            loadSellSetup();                      // load sell setup
+        }
+
+    });
+}
+
+// 🔥 Toggle Dropdown
+function toggleMenu(){
+    const menu = document.getElementById("dropdownMenu");
+    menu.style.display =
+        menu.style.display === "flex" ? "none" : "flex";
+}
+
+// 🔥 Logout
+function logout(){
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+
+// 🔥 Close menu if clicked outside
+window.onclick = function(event){
+    if(!event.target.closest('.menu-wrapper')){
+        const menu = document.getElementById("dropdownMenu");
+        if(menu) menu.style.display = "none";
+    }
+}
+
+// 🔥 Load Balance
+function loadBalance(){
+    fetch("http://localhost:3000/my-coins",{
+        headers:{ Authorization:"Bearer "+token }
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        document.getElementById("balanceDisplay").innerText =
+            "Coins: " + (data.coins || 0) + " ";
+    });
+}
+
+loadBalance();
+
+function loadSellSetup(){
+
+    document.getElementById("sellSection").style.display="block";
+
+    fetch("http://localhost:3000/sell/my",{
+        headers:{ Authorization:"Bearer "+token }
+    })
+    .then(res=>res.json())
+    .then(data=>{
+
+        const price = data ? data.pricePerCoin : "";
+        const active = data ? data.active : false;
+
+        document.getElementById("sellSection").innerHTML = `
+    
+    <div class="sell-card">
+
+        <label>Set Price per Coin (₹)</label>
+
+        <input type="number"
+               id="sellPrice"
+               class="price-input"
+               placeholder="Enter price per coin"
+               value="${price || ''}">
+
+        <button class="primary-btn" onclick="savePrice()">
+            Save Price
+        </button>
+
+        <div class="status-box">
+
+            <p><b>Current Price:</b> ₹${price || 0}</p>
+
+            <p>
+                <b>Status:</b>
+                <span style="color:${active ? '#22c55e' : '#ef4444'};">
+                    ${active ? "ACTIVE" : "INACTIVE"}
+                </span>
+            </p>
+
+            <button 
+                class="toggle-btn ${active ? 'active' : ''}"
+                onclick="toggleStatus()">
+                ${active ? "Turn OFF" : "Turn ON"}
+            </button>
+
+        </div>
+
+    </div>
+`;
+    });
+}
+// ================= LOAD INBOX =================
+function loadInbox(){
+
+    fetch("http://localhost:3000/message/inbox",{
+        headers:{ Authorization:"Bearer "+token }
+    })
+    .then(res=>res.json())
+    .then(data=>{
+
+        let html = "<h3>Messages</h3>";
+
+        if(data.length === 0){
+            html += "<p>No messages yet.</p>";
+        }
+
+        // 🔥 SORT ONLINE FIRST
+        data.sort((a,b) => b.isOnline - a.isOnline);
+
+        data.forEach(user => {
+
+            html += `
+            <div class="message-row"
+                onclick="openChat('${user._id}')">
+
+                <div>
+                    <span style="font-weight:bold;">
+                        💬 ${user.username}
+                    </span>
+
+                    <span style="
+                        margin-left:6px;
+                        font-size:12px;
+                        color:${user.isOnline ? '#22c55e' : 'gray'};
+                    ">
+                        ● ${user.isOnline ? "Online" : "Offline"}
+                    </span>
+                </div>
+
+                ${user.unreadCount > 0 
+                    ? `<span class="new-badge">${user.unreadCount}</span>` 
+                    : ""}
+
+            </div>
+            `;
+        });
+
+        document.getElementById("messageSection").innerHTML = html;
+    });
+}
+// ================= OPEN CHAT =================
+function openChat(userId){
+    window.location.href = "message.html?seller=" + userId;
+}
+function savePrice(){
+
+    const pricePerCoin = document.getElementById("sellPrice").value;
+
+    if(!pricePerCoin){
+        alert("Enter price");
+        return;
+    }
+
+    fetch("http://localhost:3000/sell/setup",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            Authorization:"Bearer "+token
+        },
+        body: JSON.stringify({ pricePerCoin })
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        alert(data.message);
+        loadSellSetup();
+    });
+}
+
+
+function toggleStatus(){
+
+    // First get current balance
+    fetch("http://localhost:3000/my-coins",{
+        headers:{ Authorization:"Bearer "+token }
+    })
+    .then(res=>res.json())
+    .then(data=>{
+
+        const coins = data.coins || 0;
+
+        // 🔥 If currently OFF → trying to turn ON
+        const toggleBtn = document.querySelector(".toggle-btn");
+        const isCurrentlyActive = toggleBtn.classList.contains("active");
+
+        if(!isCurrentlyActive && coins < 15){
+            alert("Minimum 15 coins required to activate selling");
+            return;
+        }
+
+        // If allowed → toggle
+        fetch("http://localhost:3000/sell/toggle",{
+            method:"POST",
+            headers:{ Authorization:"Bearer "+token }
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            alert(data.message);
+            loadSellSetup();
+        });
+
+    });
+}
+
+loadInbox();
+loadKYC();
+setInterval(loadInbox, 3000);
+</script>
+</body>
+</html>
