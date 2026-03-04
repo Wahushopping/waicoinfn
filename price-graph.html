@@ -124,7 +124,7 @@ canvas{
 let chart;
 function loadGraph(range){
 
-    fetch(`http://localhost:3000/price-history/${range}`)
+    fetch(`https://waicoinbn.onrender.com/price-history/${range}`)
     .then(res=>res.json())
     .then(data=>{
 
@@ -193,4 +193,5 @@ loadGraph("3d");
 </script>
 
 </body>
+
 </html>
