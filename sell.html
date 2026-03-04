@@ -317,7 +317,7 @@ if (!token) {
 }
 function loadKYC() {
 
-    fetch("http://localhost:3000/kyc/status",{
+    fetch("https://waicoinbn.onrender.com/kyc/status",{
         headers:{ Authorization:"Bearer "+token }
     })
     .then(res=>res.json())
@@ -409,7 +409,7 @@ window.onclick = function(event){
 
 // 🔥 Load Balance
 function loadBalance(){
-    fetch("http://localhost:3000/my-coins",{
+    fetch("https://waicoinbn.onrender.com/my-coins",{
         headers:{ Authorization:"Bearer "+token }
     })
     .then(res=>res.json())
@@ -425,7 +425,7 @@ function loadSellSetup(){
 
     document.getElementById("sellSection").style.display="block";
 
-    fetch("http://localhost:3000/sell/my",{
+    fetch("https://waicoinbn.onrender.com/sell/my",{
         headers:{ Authorization:"Bearer "+token }
     })
     .then(res=>res.json())
@@ -476,7 +476,7 @@ function loadSellSetup(){
 // ================= LOAD INBOX =================
 function loadInbox(){
 
-    fetch("http://localhost:3000/message/inbox",{
+    fetch("https://waicoinbn.onrender.com/message/inbox",{
         headers:{ Authorization:"Bearer "+token }
     })
     .then(res=>res.json())
@@ -535,7 +535,7 @@ function savePrice(){
         return;
     }
 
-    fetch("http://localhost:3000/sell/setup",{
+    fetch("https://waicoinbn.onrender.com/sell/setup",{
         method:"POST",
         headers:{
             "Content-Type":"application/json",
@@ -554,7 +554,7 @@ function savePrice(){
 function toggleStatus(){
 
     // First get current balance
-    fetch("http://localhost:3000/my-coins",{
+    fetch("https://waicoinbn.onrender.com/my-coins",{
         headers:{ Authorization:"Bearer "+token }
     })
     .then(res=>res.json())
@@ -572,7 +572,7 @@ function toggleStatus(){
         }
 
         // If allowed → toggle
-        fetch("http://localhost:3000/sell/toggle",{
+        fetch("https://waicoinbn.onrender.com/sell/toggle",{
             method:"POST",
             headers:{ Authorization:"Bearer "+token }
         })
@@ -590,4 +590,5 @@ loadKYC();
 setInterval(loadInbox, 3000);
 </script>
 </body>
+
 </html>
