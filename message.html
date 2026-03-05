@@ -79,7 +79,8 @@
         }
 
         .message img {
-            max-height: 200px;
+            max-width: 300px;
+           
             border-radius: 8px;
             margin-top: 5px;
             cursor: pointer;
@@ -248,7 +249,7 @@ input[type="text"]{
             <input type="text" id="messageInput" placeholder="Type message">
             <input type="file" id="imageInput" accept="image/*" hidden>
             <button class="send-btn" onclick="openImagePicker()"
-                style="font-size: xx-large;background-color: #ffffff;">🗐</button>
+                style="font-size: xx-large;background-color: #ffffff;colo">📷</button>
             <button class="send-btn" onclick="sendMessage()" style="font-size: xx-large; width: 70px; ">➤</button>
         </div>
 
@@ -735,4 +736,5 @@ ${msg.text ? `
 </body>
 
 </html>
+
 
