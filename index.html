@@ -352,6 +352,49 @@ select{
     border-bottom:1px solid #334155;
     background:#111827;
 }
+
+            /* Diamond Number Styling */
+.coin-count {
+    font-size: 60px;
+    font-weight: 800;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    
+    /* Metallic Gold Gradient Effect */
+    background: linear-gradient(
+        to bottom, 
+        #bf953f, 
+        #fcf6ba, 
+        #b38728, 
+        #fbf5b7, 
+        #aa771c
+    );
+    
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    /* Warm Gold Glow */
+    filter: drop-shadow(0px 0px 10px rgba(191, 149, 63, 0.4));
+}
+/* Small "coins" text fix */
+.coin-label {
+    font-size: 18px; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    /* Makes the text solid gray/white so it doesn't stay transparent */
+    -webkit-text-fill-color: #ca8020; 
+}
+
+@media (max-width: 768px) {
+    .coin-count {
+        font-size: 45px;
+    }
+    .coin-label {
+        font-size: 14px;
+    }
+}
 </style>
 </head>
 
@@ -399,8 +442,9 @@ select{
     <div class="portfolio-top">
 
     <div class="coin-count" id="coinCount">
-        0 coins
-    </div>
+    <span id="coinNumber">0</span>
+    <span class="coin-label">coins</span>
+</div>
 
     <a href="price-graph.html" class="graph-link">
         <img src="images.png" alt="Price Graph">
@@ -811,14 +855,13 @@ function loadCoins() {
             return;
         }
 
-        const coinsData = await coinsRes.json();
-        const priceData = await priceRes.json();
+                    const coinsData = await coinsRes.json();
+                    const priceData = await priceRes.json();
 
-        globalCoins = coinsData.coins || 0;
-        globalPriceINR = priceData.price || 85;
+                    globalCoins = coinsData.coins || 0;
+                    globalPriceINR = priceData.price || 85;
 
-        document.getElementById("coinCount").innerText =
-            globalCoins + " Coins";
+                    document.getElementById("coinNumber").innerText = globalCoins;
 
         updateCurrency(); // 🔥 automatically convert
     })
@@ -893,6 +936,7 @@ setInterval(loadCoins, 5000);
 
 </body>
 </html>
+
 
 
 
