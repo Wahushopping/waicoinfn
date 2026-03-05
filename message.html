@@ -3,24 +3,28 @@
 
 <head>
     <title>Chat</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        body {
-            background: #0f172a;
-            font-family: Segoe UI;
-            margin: 0;
-            color: white;
-        }
+        body{
+    background:#0f172a;
+    font-family:Segoe UI;
+    margin:0;
+    color:white;
+    height:100dvh;
+    overflow:hidden;
+}
 
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #1e293b;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            height: 85vh;
-        }
+     html, body{
+    touch-action: pan-y;
+}
+
+    .container{
+    width:100%;
+    background:#1e293b;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+}
 
         .header {
             padding: 15px;
@@ -28,15 +32,15 @@
             font-weight: bold;
         }
 
-        .messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            scrollbar-width: none;
-        }
-
+ .messages{
+    flex:1;
+    overflow-y:auto;
+    padding:15px;
+    display:flex;
+    flex-direction:column;
+    padding-bottom:90px;
+    -webkit-overflow-scrolling:touch;
+}
         .messages::-webkit-scrollbar {
             display: none;
         }
@@ -109,14 +113,20 @@
             max-height: 90%;
         }
 
-        .input-area {
-
-            padding: 10px;
-            background: #111827;
-            display: flex;
-            gap: 5px;
-        }
-
+        .input-area{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    padding:10px;
+    background:#111827;
+    display:flex;
+    gap:5px;
+    align-items:center;
+}
+input[type="text"]{
+    font-size:16px;
+}
         .input-area input[type="text"] {
 
             flex: 1;
@@ -131,6 +141,38 @@
             border: none;
             border-radius: 6px;
             cursor: pointer;
+        }
+
+
+
+
+        .footer-container {
+            flex-direction: column;
+        }
+
+        @media (max-width:768px) {
+
+            .coin-count {
+                font-size: 40px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .nav-btn {
+                padding: 6px 10px;
+                font-size: 13px;
+            }
+
+            .balance {
+                font-size: 14px;
+            }
+
+            .portfolio-row {
+                font-size: 14px;
+            }
+
         }
     </style>
 </head>
@@ -315,67 +357,67 @@ z-index:999;
 
 
 
-       function openReportBox(event) {
-    event.stopPropagation();
-    document.getElementById("reportBox").style.display = "block";
-}
-
-function closeReportBox() {
-    document.getElementById("reportBox").style.display = "none";
-}
-
-async function submitReport() {
-
-    const btn = event.target;
-    btn.disabled = true;
-
-    const reason = document.getElementById("reportReason").value.trim();
-
-    if (!reason) {
-        alert("Please enter reason");
-        btn.disabled = false;
-        return;
-    }
-
-    try {
-
-        const res = await fetch("https://waicoinbn.onrender.com/report", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + token
-            },
-            body: JSON.stringify({
-                reportedUserId: otherUserId,
-                reason
-            })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            alert(data.message || "Error reporting user");
-            btn.disabled = false;
-            return;
+        function openReportBox(event) {
+            event.stopPropagation();
+            document.getElementById("reportBox").style.display = "block";
         }
 
-        alert("User reported successfully. Chat blocked.");
+        function closeReportBox() {
+            document.getElementById("reportBox").style.display = "none";
+        }
 
-        // 🔥 Disable chat input permanently
-        document.getElementById("textInputArea").style.display = "none";
+        async function submitReport() {
 
-        // 🔥 Hide report button after reporting
-        document.querySelector("[onclick^='openReportBox']").style.display = "none";
+            const btn = event.target;
+            btn.disabled = true;
 
-        document.getElementById("reportReason").value = "";
-        closeReportBox();
+            const reason = document.getElementById("reportReason").value.trim();
 
-    } catch (err) {
-        alert("done");
-    }
+            if (!reason) {
+                alert("Please enter reason");
+                btn.disabled = false;
+                return;
+            }
 
-    btn.disabled = false;
-}
+            try {
+
+                const res = await fetch("https://waicoinbn.onrender.com/report", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        reportedUserId: otherUserId,
+                        reason
+                    })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    alert(data.message || "Error reporting user");
+                    btn.disabled = false;
+                    return;
+                }
+
+                alert("User reported successfully. Chat blocked.");
+
+                // 🔥 Disable chat input permanently
+                document.getElementById("textInputArea").style.display = "none";
+
+                // 🔥 Hide report button after reporting
+                document.querySelector("[onclick^='openReportBox']").style.display = "none";
+
+                document.getElementById("reportReason").value = "";
+                closeReportBox();
+
+            } catch (err) {
+                alert("done");
+            }
+
+            btn.disabled = false;
+        }
 
 
 
@@ -610,8 +652,8 @@ async function submitReport() {
                     alert("Server error");
                 });
         }
-        
-        
+
+
         /* LOAD MESSAGES */
         function loadMessages() {
 
@@ -689,6 +731,5 @@ ${msg.text ? `
     </script>
 
 </body>
-
 
 </html>
