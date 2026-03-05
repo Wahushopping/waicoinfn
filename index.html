@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Wai Crypto Dashboard</title>
+<title>Wai Coins Dashboard</title>
 
 <style>
 body{
@@ -523,7 +523,7 @@ select{
     <div class="footer-container">
 
         <div class="footer-logo">
-            <h3>Wai Crypto</h3>
+            <h3>Wai Coins</h3>
             <p>Secure • Transparent • Profitable</p>
         </div>
 
@@ -537,7 +537,7 @@ select{
     </div>
 
     <div class="footer-bottom">
-        © 2025 Wai Crypto. All Rights Reserved.
+        © 2025 Wai Coins. All Rights Reserved.
     </div>
 
 </footer>
@@ -795,7 +795,7 @@ function loadCoins() {
     }
 
     Promise.all([
-        fetch("http://localhost:3000/my-coins", {
+        fetch("https://waicoinbn.onrender.com/my-coins", {
             headers: { Authorization: "Bearer " + token }
         }),
         fetch("https://waicoinbn.onrender.com/coin-price")
@@ -890,6 +890,7 @@ setInterval(loadCoins, 5000);
 
 </body>
 </html>
+
 
 
 
