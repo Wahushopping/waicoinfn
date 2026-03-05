@@ -174,6 +174,17 @@ input[type="text"]{
             }
 
         }
+        .report-warning {
+    background: rgba(239, 68, 68, 0.2); /* Soft red background */
+    border: 1px solid #ef4444;
+    color: #f87171;
+    padding: 8px;
+    margin-top: 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.4;
+}
     </style>
 </head>
 
@@ -182,35 +193,26 @@ input[type="text"]{
     <div class="container">
 
         <div class="header" id="chatHeader">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-
-                <div id="chatUserInfo">
-                    Loading...
-                </div>
-
-                <button id="openSendCoinBtn" onclick="toggleSendBox()" style="
-                display:none;
-                padding:6px 12px;
-                background:#ef4444;
-                border:none;
-                border-radius:6px;
-                font-size:12px;
-                font-weight:bold;
-                cursor:pointer;">
-                    💰 Send Coins
-                </button>
-                <button onclick="openReportBox(event)" style="
-padding:6px 12px;
-background:#f97316;
-border:none;
-border-radius:6px;
-font-size:12px;
-font-weight:bold;
-cursor:pointer;">
-                    🚨 Report
-                </button>
-            </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div id="chatUserInfo">
+            Loading...
         </div>
+
+        <div style="display:flex; gap: 8px;">
+            <button id="openSendCoinBtn" onclick="toggleSendBox()" style="display:none; padding:6px 12px; background:#a2f0f3; border:none; border-radius:6px; font-size:12px; font-weight:bold; color:red; cursor:pointer;">
+                💰 Send Coins
+            </button>
+            <button onclick="openReportBox(event)" style="padding:6px 12px; background:#fffcfa; border:none; border-radius:6px; font-size:12px; font-weight:bold; color: #0b1220; cursor:pointer;">
+                🚨 Report
+            </button>
+        </div>
+    </div>
+
+    <div class="report-warning">
+        ⚠️ <b>Safety Note:</b> If you scam, your account will be permanently banned and chat access blocked.
+    </div>
+</div>
+
 
 
 
@@ -733,3 +735,4 @@ ${msg.text ? `
 </body>
 
 </html>
+
