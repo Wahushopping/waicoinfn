@@ -358,8 +358,30 @@ select{
 <body>
 
 <div class="top-bar">
-    <div class="logo">Wai Coins </div>
+        <div class="logo">Wai Coins </div>
+        <div style="display:flex; align-items:center; gap:20px;">
+            <div class="balance" id="balanceDisplay">Balance: ₹0</div>
 
+            <!-- 🔥 3 DOT MENU -->
+            <div class="menu-wrapper">
+                <div class="menu-icon" onclick="toggleMenu()">⋮</div>
+
+                <div class="dropdown-menu" id="dropdownMenu">
+
+                    <div class="user-info" id="dropdownUsername">
+                        Loading...
+                    </div>
+
+                    <button onclick="logout()">Logout</button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+<div class="top-bar" style="text-align: center;">
     <div class="nav-links">
         <div class="nav-item">
             <a href="buy.html" class="nav-btn" style="background:green; padding:5px 10px;">Buy ▲</a>
@@ -367,25 +389,6 @@ select{
 
         <div class="nav-item">
             <a href="sell.html" class="nav-btn" style="background:#fd1e43; padding:5px 10px;">Sell ▼ </a>
-        </div>
-    </div>
-
-    <div style="display:flex; align-items:center; gap:20px;">
-        <div class="balance" id="balanceDisplay">Balance: ₹0</div>
-
-        <!-- 🔥 3 DOT MENU -->
-        <div class="menu-wrapper">
-            <div class="menu-icon" onclick="toggleMenu()">⋮</div>
-
-            <div class="dropdown-menu" id="dropdownMenu">
-
-    <div class="user-info" id="dropdownUsername">
-        Loading...
-    </div>
-
-    <button onclick="logout()">Logout</button>
-
-</div>
         </div>
     </div>
 </div>
@@ -890,6 +893,7 @@ setInterval(loadCoins, 5000);
 
 </body>
 </html>
+
 
 
 
