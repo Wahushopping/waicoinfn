@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Wai Crypto Dashboard</title>
 
 <style>
@@ -10,10 +11,22 @@ body{
     background:#0f172a;
     color:white;
     margin:0;
+    padding: 10px;
+    
 }
+
+body{
+    
+
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    
+}
+
 .top-bar{
     background:#111827;
-    padding:15px 5%;
+    padding:1px;
     
     justify-content:space-between;
     align-items:center;
@@ -23,15 +36,39 @@ body{
     font-weight:bold;
     font-size:18px;
 }
-/* ===== MOBILE RESPONSIVE FIX ===== */
+
+.nav-links{
+    display:flex;
+    gap:10px;
+}
+
+.nav-item{
+    position:relative;
+}
 
 
-    
+#myReferralCode{
+    width:100%;
+}
+
+.card div{
+    flex-wrap:wrap;
+}
+
+
+
+
 .footer-container{
     flex-direction:column;
 }
+
 @media (max-width:768px){
    
+
+   
+
+
+
     .coin-count{
         font-size:40px;
     }
@@ -41,7 +78,7 @@ body{
     }
 
     .nav-btn{
-        padding:6px 10px;
+        padding:1px 10px;
         font-size:13px;
     }
 
@@ -54,22 +91,6 @@ body{
     }
 
 }
-#myReferralCode{
-    width:100%;
-}
-
-.card div{
-    flex-wrap:wrap;
-}
-.nav-links{
-    display:flex;
-    gap:20px;
-}
-
-.nav-item{
-    position:relative;
-}
-
 .nav-btn{
     text-decoration:none;
     color:white;
@@ -337,15 +358,15 @@ select{
 <body>
 
 <div class="top-bar">
-    <div class="logo">Wai Coins</div>
+    <div class="logo">Wai Coins </div>
 
     <div class="nav-links">
         <div class="nav-item">
-            <a href="buy.html" class="nav-btn">Buy Coins</a>
+            <a href="buy.html" class="nav-btn" style="background:green; padding:5px 10px;">Buy ▲</a>
         </div>
 
         <div class="nav-item">
-            <a href="sell.html" class="nav-btn" style="background:#fd1e43;">Sell Coins</a>
+            <a href="sell.html" class="nav-btn" style="background:#fd1e43; padding:5px 10px;">Sell ▼ </a>
         </div>
     </div>
 
@@ -379,7 +400,7 @@ select{
     </div>
 
     <a href="price-graph.html" class="graph-link">
-        <img src="images.png" alt="Price Graph">
+        <img src="image/images.png" alt="Price Graph">
     </a>
 
 </div>
@@ -774,7 +795,7 @@ function loadCoins() {
     }
 
     Promise.all([
-        fetch("https://waicoinbn.onrender.com/my-coins", {
+        fetch("http://localhost:3000/my-coins", {
             headers: { Authorization: "Bearer " + token }
         }),
         fetch("https://waicoinbn.onrender.com/coin-price")
